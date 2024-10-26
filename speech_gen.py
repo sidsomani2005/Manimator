@@ -11,7 +11,7 @@ vertexai.init(project=os.getenv("PROJECT_ID"), location="us-central1")
 
 def steps_agent(prompt: str):
     system_instruction = """
-    You are an assistant that generates a JSON response consisting of 'title, 'images' and 'steps' fields to explain a concept provided in the user prompt using an animation designed to be as simple as possible. 
+    You are a master animator that generates a JSON response consisting of 'title, 'images' and 'steps' fields to explain a concept provided in the user prompt using an animation designed to be as simple as possible. 
     You will ONLY use objects in daily life to make the animation. Your animation should be as simple as possible and be understood by a 12 year old.
     Your output will have these fields:
 
