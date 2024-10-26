@@ -1,79 +1,100 @@
 from manim import *
-from manim_voiceover import VoiceoverScene, VoiceoverTracker
+from manim_voiceover import VoiceoverScene
 from manim_voiceover.services.gtts import GTTSService
+import requests
 import os
 
 
-class MultiplicationExample(VoiceoverScene):
+class Subtraction(VoiceoverScene):
     def construct(self):
         self.set_speech_service(GTTSService(lang="en", tld="com"))
 
-        # Placeholder for images - Replace with actual image loading from GCP
-        cookie_img = os.path.join("./cookie.png")
-        plate_img = os.path.join("./plate.png")
+        # Step 1: Initialize a canvas of size 800x600 pixels.
+        self.camera.background_color = WHITE  # Set background color to white
 
-        cookie = ImageMobject(cookie_img).scale(0.3)
-        plate = ImageMobject(plate_img).scale(0.5)
+        with self.voiceover(text="Let's explore subtraction.") as tracker:
+            self.wait(tracker.duration)
 
-        # Positioning plates and cookies
-        plate1 = plate.copy()
-        plate2 = plate.copy().shift(2 * RIGHT)
-        plate3 = plate.copy().shift(4 * RIGHT)
+        # Step 2: Set the size of each cookie to 40x40 pixels.
+        cookie_size = 0.5
 
-        cookie1 = cookie.copy().shift(0.2 * UP)
-        cookie2 = cookie.copy().shift(0.2 * DOWN)
-        cookie3 = cookie.copy().shift(0.2 * RIGHT)
-        cookie4 = cookie.copy().shift(0.2 * LEFT)
+        # Step 3: Download the image from the URL
+        url = "https://storage.googleapis.com/mani_image_buckets/cookie.png"
+        image_path = "cookie.png"
 
-        cookies_plate1 = Group(cookie1, cookie2, cookie3, cookie4)
-        cookies_plate2 = cookies_plate1.copy().shift(2 * RIGHT)
-        cookies_plate3 = cookies_plate1.copy().shift(4 * RIGHT)
+        # Check if the image is already downloaded to avoid redundant downloads
+        if not os.path.exists(image_path):
+            response = requests.get(url)
+            with open(image_path, "wb") as file:
+                file.write(response.content)
 
-        # Voiceover and animations
         with self.voiceover(
-            text="Multiplication is like a shortcut for adding the same number over and over again."
+            text="Imagine you have a plate with 5 cookies on it."
         ) as tracker:
             self.wait(tracker.duration)
 
-        with self.voiceover(
-            text="Imagine you have a *_plate_* full of *_cookies_*."
-        ) as tracker:
-            self.play(FadeIn(plate1), FadeIn(cookies_plate1), run_time=tracker.duration)
+        # Step 4: Add 5 cookies horizontally
+        cookies = Group(
+            *[ImageMobject(image_path).scale(cookie_size) for _ in range(5)]
+        ).arrange(RIGHT, buff=1)
+        cookies.move_to(DOWN)
 
         with self.voiceover(
-            text="Let's say you have 3 *_plates_* and each *_plate_* has 4 *_cookies_* on it."
+            text="Each cookie represents one item in our total count."
         ) as tracker:
+            self.play(FadeIn(cookies), run_time=tracker.duration)
+
+        # Step 5: Continue with the rest of the animation
+        minus_sign = Text("-").scale(2).move_to(2 * RIGHT)
+
+        with self.voiceover(
+            text="Now, let’s say you eat 2 of these cookies."
+        ) as tracker:
+            self.play(FadeIn(minus_sign), run_time=tracker.duration)
+
+        number_5 = Text("5", font_size=48, weight=BOLD).next_to(cookies, UP, buff=1.5)
+
+        with self.voiceover(
+            text="As each cookie is removed, our total number of cookies decreases."
+        ) as tracker:
+            self.play(FadeIn(number_5), run_time=tracker.duration)
+
+        number_2 = Text("2", font_size=48, weight=BOLD).next_to(
+            minus_sign, UP, buff=1.5
+        )
+
+        with self.voiceover(
+            text="After removing 2 cookies, let’s count how many are left."
+        ) as tracker:
+            self.play(FadeIn(number_2), run_time=tracker.duration)
+
+        # Step 8: Remove 2 cookies
+        with self.voiceover(text="We began with 5 cookies and removed 2.") as tracker:
             self.play(
-                FadeIn(plate2),
-                FadeIn(cookies_plate2),
-                FadeIn(plate3),
-                FadeIn(cookies_plate3),
+                cookies[-1].animate.shift(UP * 3).set_opacity(0),
+                cookies[-2].animate.shift(UP * 3).set_opacity(0),
                 run_time=tracker.duration,
             )
 
         with self.voiceover(
-            text="To find out how many *_cookies_* you have in total, you can use multiplication!"
+            text="Now, there are 3 cookies left on the plate."
         ) as tracker:
-            self.wait(tracker.duration)
+            self.play(ApplyMethod(minus_sign.scale, 1.2), run_time=tracker.duration)
 
-        with self.voiceover(
-            text="Instead of adding 4 + 4 + 4, we can simply multiply 3 *_plates_* by 4 *_cookies_* per *_plate_*."
-        ) as tracker:
-            self.play(
-                ApplyWave(plate1),
-                ApplyWave(plate2),
-                ApplyWave(plate3),
-                ApplyWave(cookie1),
-                ApplyWave(cookie2),
-                ApplyWave(cookie3),
-                ApplyWave(cookie4),
-                run_time=tracker.duration,
-            )
+        equals_sign = Text("=").scale(2).move_to(2 * RIGHT).shift(DOWN)
 
-        with self.voiceover(
-            text="So, 3 times 4, written as 3 x 4, equals 12. That means you have a total of 12 *_cookies_*!"
-        ) as tracker:
-            all_cookies = Group(cookies_plate1, cookies_plate2, cookies_plate3)
-            self.play(Circle(all_cookies, color=YELLOW, run_time=tracker.duration))
+        with self.voiceover(text="This shows that 5 minus 2 equals 3") as tracker:
+            self.play(FadeIn(equals_sign), run_time=tracker.duration)
+
+        number_3 = Text("3", font_size=48, weight=BOLD).next_to(
+            equals_sign, UP, buff=1.5
+        )
+
+        with self.voiceover(text="You now have 3 cookies left!") as tracker:
+            self.play(FadeIn(number_3), run_time=tracker.duration)
 
         self.wait()
+
+        # Optional: Clean up the downloaded image file after rendering
+        if os.path.exists(image_path):
+            os.remove(image_path)

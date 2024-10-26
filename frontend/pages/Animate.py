@@ -62,11 +62,10 @@ st.markdown(
 
 
 async def call_generate(prompt):
-    return await generate.generate(prompt)
-
-
-async def call_generate_video():
-    return await generate.generate_video()
+    output = await generate.generate(prompt)
+    videoPath = await generate.generate_video()
+    code, transcript = output
+    return (code, transcript, videoPath)
 
 
 with st.form("chat_input_form"):
@@ -84,12 +83,9 @@ with st.form("chat_input_form"):
 
     if prompt and submitted:
 
-        with st.spinner("Generating animation code..."):
+        with st.spinner("Generating animation..."):
             output = asyncio.run(call_generate(prompt))
-            code, transcript = output
-
-        with st.spinner("Generating video..."):
-            videoPath = asyncio.run(call_generate_video())
+            code, transcript, videoPath = output
 
         st.video(
             data=videoPath,

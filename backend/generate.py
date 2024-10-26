@@ -1,4 +1,4 @@
-import asyncio, os, json
+import asyncio, os, json, subprocess
 from prompt_gen import main_prompt, manimator
 
 
@@ -8,7 +8,12 @@ async def generate(user_prompt) -> tuple[str, str]:
     code = manimator(mp)
     mp = mp[8:-4]
     mp = json.loads(mp)
-    mp = mp["text"]
+    steps = mp["steps"]
+    transcript = ""
+    for step in steps:
+        if steps[step] is not None:
+            transcript += steps[step] + "\n\n"
+    transcript = transcript[:-2]
     code = code[10:-4]
     current_dir = os.path.dirname(os.path.abspath(__file__))
     output_dir = os.path.join(current_dir, "output")
@@ -16,7 +21,7 @@ async def generate(user_prompt) -> tuple[str, str]:
     file_path = os.path.join(output_dir, "manim_script.py")
     with open(file_path, "w") as file:
         file.write(code)
-    return (code, mp)
+    return (code, transcript)
 
 
 async def generate_video():
@@ -33,14 +38,14 @@ async def generate_video():
         "--rm",
         "-v",
         f"{output_dir}:/manim",
-        "manim_voiceover_image",  # Use the custom image
+        "manim_voiceover_image",  # Ensure this matches the built image name
         "manim",
         "-pql",
         "/manim/manim_script.py",
         "--disable_caching",
     ]
 
-    process = await asyncio.create_subprocess_exec(
+    process = subprocess.run(
         *docker_command, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
     )
     stdout, stderr = await process.communicate()
@@ -71,11 +76,10 @@ async def generate_video():
     video_file = video_files[0]
     video_path = os.path.join(resolution_dir, video_file)
 
-    # return video_path
-    # return video_path
-    return "./backend/output/GTTSExample.mp4"
+    return video_path
+    # return "./backend/output/GTTSExample.mp4"
 
 
-if __name__ == "__main__":
-    # asyncio.run(generate("Visually explain of how matrix transformations work"))
-    asyncio.run(generate_video())
+# if __name__ == "__main__":
+#     asyncio.run(generate("Division"))
+#     # asyncio.run(generate_video())
