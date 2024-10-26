@@ -18,18 +18,17 @@ def main_prompt(prompt: str):
 
     Your task is to take the user's prompt and generate a JSON response as per the format above, using simple daily objects in the explanation.
     """
-    model = GenerativeModel(model_name="gemini-1.5-flash",  system_instruction=system_instruction)
-
-    response = model.generate_content(
-        prompt
+    model = GenerativeModel(
+        model_name="gemini-1.5-flash", system_instruction=system_instruction
     )
-    return response.text
 
+    response = model.generate_content(prompt)
+    return response.text
 
 
 def manimator(data: str):
     system_instruction = """
-    You are an assistant that generates Manim Python code to create animations with synchronized voiceovers.
+    You are an assistant that generates Manim Python code to create animations with synchronized voiceovers. Use updated Manim libraries and features to create engaging visual content for educational purposes.
 
     **Your Task:**
 
@@ -63,25 +62,33 @@ def manimator(data: str):
     - Display text on the screen when appropriate, using the `Text` or `Tex` classes.
     - Animate the objects mentioned in the transcript at the correct timestamps.
     - Use simple animations (e.g., `FadeIn`, `MoveTo`, `Rotate`) to engage a 12-year-old audience.
+    - If the transcript mentions text in the format of "_*example*_", make sure to display the text as "example" in the voiceover.
 
     5. **Positioning Text and Objects:**
     - Be mindful about where the images and text are being rendered.
-    - The images and text should not be overlapping and it should display the elements clearly.
-    - Only overlap elements if absolutely necessary.
+    - The images and text should never display on top of each other and should be clearly visible to the viewer
+    - Keep all elements within the scene boundries at all times.
 
-    5. **Code Formatting:**
+    6. **Code Formatting:**
     - Provide well-formatted and commented Python code.
     - Include necessary `import` statements and ensure the code is executable in a Manim environment.
     - Comment on any placeholders where credentials or additional setup might be needed.
 
-    6. **Example Usage:**
+    7. **Example Usage:**
     - If the transcript mentions "_*apple*_", display the apple image loaded from the GCP bucket at that point in the animation.
     - Use the timestamps to align animations with the voiceover.
+
+    8. **Important Things to Do Before Responding:**
+    - Review the code you have generated at least 3 times to ensure it runs without any errors.
+    - During your review, guarantee that there are no elements outside of the page and that no elements' positions overlap.
+    - Ensure that all animations and illustrations are drawn right-side up and move in a direction that makes sense in the context of the explanation.
 
     **Output Format:**
 
     - Provide the complete Manim Python code as plain text.
     - Do not include any explanations outside the code.
+    - Do not include any stray characters.
+    - Output in the format of a Python script that can be run in a Manim environment directly without any modifications.
     - An example is given below:
         from manim import *
         from manim_voiceover import VoiceoverScene
@@ -109,13 +116,13 @@ def manimator(data: str):
 
                 self.wait()
     """
-    model = GenerativeModel(model_name="gemini-1.5-pro",  system_instruction=system_instruction)
-
-    response = model.generate_content(
-        data
+    model = GenerativeModel(
+        model_name="gemini-1.5-pro", system_instruction=system_instruction
     )
+
+    response = model.generate_content(data)
     return response.text
 
 
 if __name__ == "__main__":
-    print(manimator(main_prompt("explain addition")))
+    print(manimator(main_prompt("explain projectile motion")))
