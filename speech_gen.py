@@ -144,28 +144,23 @@ def audio_agent(prompt: str):
     - The 'steps' field is a dictionary where the keys are the specific steps to generate speech transcriptions on. HOWEVER, THE VALUES CORRESPONDING TO EACH STEP WILL BE NULL. THESE VALUES ARE WHAT YOU NEED TO FILL WITH SPEECH TRANSCRIPTIONS (REFER TO OUTPUT GUIDELINES)
     - Here is a sample of what the input would be for you to generate speech additions:
         {
-            "title": "Addition",
+            "title": "Subtraction",
             "images": {
-                "apple": "https://storage.googleapis.com/path_to_apple_image.png"
+                "cookie": "https://storage.googleapis.com/path_to_cookie_image.png"
             },
-            "steps": {
-                "Step 1: Initialize a canvas of size 800x600 pixels.": null,
-                "Step 2: Set the size of each apple to 50x50 pixels.": null,
-                "Step 3: Add Apple 1 at coordinates (100, 300).": null,
-                "Step 4: Add Apple 2 at coordinates (200, 300).": null,
-                "Step 5: Apply a fade-in effect lasting 0.5 seconds for each apple.": null,
-                "Step 6: Add a plus sign at coordinates (250, 300) with a size of 50x50 pixels.": null,
-                "Step 7: Display Apple 3 at coordinates (800, 300), Apple 4 at (900, 300), and Apple 5 at (1000, 300).": null,
-                "Step 8: Move Apple 3 from (800, 300) to (350, 300) over 0.7 seconds.": null,
-                "Step 9: Move Apple 4 from (900, 300) to (450, 300) over 0.7 seconds.": null,
-                "Step 10: Move Apple 5 from (1000, 300) to (550, 300) over 0.7 seconds.": null,
-                "Step 11: Apply a scale-in effect to the plus sign over 0.3 seconds.": null,
-                "Step 12: Apply an ease-in effect to the movement of the apples.": null,
-                "Step 13: Move Apple 1 to (100, 300) and Apple 2 to (200, 300).": null,
-                "Step 14: Move Apple 3 to (300, 300), Apple 4 to (400, 300), and Apple 5 to (500, 300).": null,
-                "Step 15: Animate the apples moving over 1 second with an ease-out effect and a bounce effect.": null,
-                "Step 16: Add a text box displaying \"2 + 3 = 5\" at coordinates (350, 100).": null,
-                "Step 17: Set the font size to 48px bold for the text.": null
+            "steps" : 
+            {
+                "Step 1: Initialize a canvas of size 800x600 pixels." : null
+                "Step 2: Set the size of each cookie to 40x40 pixels." : null
+                "Step 3: Add 5 cookies horizontally, starting at coordinates (100, 300) with 50 pixel spacing between each cookie." : null
+                "Step 4: Apply a fade-in effect lasting 0.5 seconds for all five cookies." : null
+                "Step 5: Add a minus sign at coordinates (450, 300) with a size of 50x50 pixels." : null
+                "Step 6: Add the number '5' at coordinates (300, 200) with a font size of 48px bold." : null
+                "Step 7: Add the number '2' at coordinates (550, 200) with a font size of 48px bold." : null
+                "Step 8: Move 2 cookies starting from the rightmost cookie upwards from (300, 300) to (300, 100) one after the other with 0.5 seconds delay between each cookie and a fade-out effect over 0.3 seconds.": null
+                "Step 9: Apply a scale-in effect to the minus sign over 0.3 seconds." : null
+                "Step 10: Add an equals sign at coordinates (450, 200) with a size of 50x50 pixels and apply a fade-in effect over 0.5 seconds." : null
+                "Step 11: Add the number '3' at coordinates (450, 100) with a font size of 48px bold and apply a fade-in effect over 0.5 seconds." : null
             }
         }
 

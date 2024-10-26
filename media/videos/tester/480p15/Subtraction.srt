@@ -1,0 +1,44 @@
+1
+00:00:00,000 --> 00:00:02,060
+Let's explore subtraction.
+
+2
+00:00:02,160 --> 00:00:05,300
+Imagine you have a plate with 5 cookies on it.
+
+3
+00:00:05,400 --> 00:00:09,020
+Each cookie represents one item in our total count.
+
+4
+00:00:09,120 --> 00:00:12,260
+Now, let’s say you eat 2 of these cookies.
+
+5
+00:00:12,360 --> 00:00:15,908
+We’ll start by taking away 2 cookies from the plate..
+
+6
+00:00:16,008 --> 00:00:21,164
+As each cookie is removed, our total number of cookies decreases.
+
+7
+00:00:21,264 --> 00:00:25,244
+After removing 2 cookies, let’s count how many are left.
+
+8
+00:00:25,344 --> 00:00:28,580
+We began with 5 cookies and removed 2.
+
+9
+00:00:28,680 --> 00:00:31,700
+Now, there are 3 cookies left on the plate.
+
+10
+00:00:31,813 --> 00:00:34,929
+This shows that 5 minus 2 equals 3
+
+11
+00:00:35,080 --> 00:00:37,452
+You now have 3 cookies left!
+

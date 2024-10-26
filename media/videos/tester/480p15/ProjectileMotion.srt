@@ -1,0 +1,60 @@
+1
+00:00:00,000 --> 00:00:03,443
+Imagine you're playing with a ball. You throw it up
+
+2
+00:00:03,543 --> 00:00:06,569
+in the air. What happens? It goes up, then it
+
+3
+00:00:06,669 --> 00:00:11,085
+comes back down, right? That's called projectile motion. It's the
+
+4
+00:00:11,185 --> 00:00:14,420
+way things move when they're thrown or launched.
+
+5
+00:00:14,466 --> 00:00:17,980
+Let's break it down. When you throw the ball, you
+
+6
+00:00:18,080 --> 00:00:22,111
+give it a push. That's its initial velocity. But gravity
+
+7
+00:00:22,211 --> 00:00:25,430
+is also working on the ball, pulling it down.
+
+8
+00:00:25,466 --> 00:00:30,789
+So, as the ball goes up, gravity slows it down. Then, it stops for
+
+9
+00:00:30,889 --> 00:00:36,622
+a moment at the highest point, and gravity starts pulling it back down.
+
+10
+00:00:36,666 --> 00:00:39,974
+It's like when you throw a basketball onto a table.
+
+11
+00:00:40,066 --> 00:00:43,513
+It bounces up, then falls back down. Projectile
+
+12
+00:00:43,613 --> 00:00:46,230
+motion is like that, but in the air!
+
+13
+00:00:46,266 --> 00:00:50,584
+So, projectile motion is when something goes up, then comes
+
+14
+00:00:50,684 --> 00:00:54,702
+back down, because of gravity. It's all about that push
+
+15
+00:00:54,802 --> 00:00:57,398
+you give it and the pull of gravity.
+

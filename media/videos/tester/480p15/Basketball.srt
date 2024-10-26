@@ -1,0 +1,40 @@
+1
+00:00:00,000 --> 00:00:06,560
+Imagine you're playing basketball. You throw the _*basketball*_, right? It goes
+
+2
+00:00:06,660 --> 00:00:11,788
+up in the air, then comes back down. That's projectile motion!
+
+3
+00:00:11,888 --> 00:00:16,004
+It's how things move when you throw or shoot them.
+
+4
+00:00:16,133 --> 00:00:22,751
+So, the _*basketball*_, when it leaves your hand, it's going forward and
+
+5
+00:00:22,851 --> 00:00:28,816
+up. But gravity is pulling it down, like an invisible force. That
+
+6
+00:00:28,916 --> 00:00:33,481
+makes it go in a curved path, called a trajectory.
+
+7
+00:00:33,600 --> 00:00:42,584
+It's like if you rolled the _*basketball*_ down a _*ramp*_, it wouldn't go
+
+8
+00:00:42,684 --> 00:00:50,564
+straight, it would go in a curve because of the _*ramp*_'s shape.
+
+9
+00:00:50,666 --> 00:00:54,726
+That's projectile motion in a nutshell! Things go up,
+
+10
+00:00:54,826 --> 00:00:58,414
+then down, in a curved path because of gravity.
+

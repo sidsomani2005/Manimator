@@ -1,0 +1,8 @@
+# This file is used internally by FFMPEG.
+file 'file:/Users/sidsomani/Desktop/manimator/media/videos/tester/480p15/partial_movie_files/Basketball/1185818338_362508662_223132457.mp4'
+file 'file:/Users/sidsomani/Desktop/manimator/media/videos/tester/480p15/partial_movie_files/Basketball/624642324_1316219150_1572894138.mp4'
+file 'file:/Users/sidsomani/Desktop/manimator/media/videos/tester/480p15/partial_movie_files/Basketball/624642324_3243009447_1572894138.mp4'
+file 'file:/Users/sidsomani/Desktop/manimator/media/videos/tester/480p15/partial_movie_files/Basketball/624642324_1530643464_1538048363.mp4'
+file 'file:/Users/sidsomani/Desktop/manimator/media/videos/tester/480p15/partial_movie_files/Basketball/624642324_3079467399_621986144.mp4'
+file 'file:/Users/sidsomani/Desktop/manimator/media/videos/tester/480p15/partial_movie_files/Basketball/624642324_1683354659_2832973092.mp4'
+file 'file:/Users/sidsomani/Desktop/manimator/media/videos/tester/480p15/partial_movie_files/Basketball/624642324_4070781142_631829896.mp4'
