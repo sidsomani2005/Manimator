@@ -81,9 +81,9 @@ with st.form("chat_input_form"):
     if prompt and submitted:
 
         with st.spinner("Generating animation..."):
-            path = asyncio.run(call_generate(prompt))
-
-        st.write(path)
+            output = asyncio.run(call_generate(prompt))
+            print(output)
+            code, transcript = output
 
         st.video(
             data="./backend/output/GTTSExample.mp4",
@@ -97,11 +97,11 @@ with st.form("chat_input_form"):
 
         with transcriptTab:
             st.write("### Transcript")
-            st.write("This is the transcript of the generated animation")
+            st.markdown(f"```\n{transcript}\n```")
 
         with codeTab:
             st.write("### Source Code")
-            st.markdown("```python\nprint('Hello, World!')\n```")
+            st.markdown(f"```python\n{code}\n```")
 
     else:
         emptyContainer = st.container(border=1, height=200)
