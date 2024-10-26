@@ -127,3 +127,25 @@ def manimator(data: str):
 
 if __name__ == "__main__":
     print(manimator(main_prompt("explain projectile motion")))
+
+
+
+
+# def checking_agent(video: str, subject: str, code: str):
+#     video_file = Part.from_uri(
+#     uri=video,
+#     mime_type="video/mp4",
+#     )
+#     system_instruction = """
+#     You are an assistant that checks a video explaing a key concept called"""+  subject +""". 
+#     You are given the video and the manim code to generate the video. Your job is to correct the manim code so the video
+#     is correct and as intended. You must make sure that the concept is explained properly. You will only return manim code 
+#     in the same format it was given to you. Dont explain anything just return the code.
+#     """
+#     contents = [video_file, "The video is attached and here is the code used to generate the video:" + code]
+#     model = GenerativeModel(
+#         model_name="gemini-1.5-pro", system_instruction=system_instruction
+#     )
+
+#     response = model.generate_content(contents)
+#     return response.text
