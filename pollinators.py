@@ -43,19 +43,16 @@ def upload_image_to_gcs(bucket_name, object_name, image_path):
     bucket = storage_client.bucket(bucket_name)
     blob = bucket.blob(f"{object_name}.png")
     
-    # Upload the image
+
     blob.upload_from_filename(image_path)
     
-    # Remove the temporary file
     os.remove(image_path)
     
-    # Return the URL of the uploaded object (public URL depends on bucket permissions)
     public_url = f"https://storage.googleapis.com/{bucket_name}/{object_name}.png"
     
     return public_url
 
 def check_if_image_exists(bucket_name, object_name):
-    """Check if an image already exists in GCS."""
     storage_client = storage.Client()
     bucket = storage_client.bucket(bucket_name)
     blob = bucket.blob(f"{object_name}.png")
@@ -65,45 +62,36 @@ def process_json_and_generate_images(json_data, bucket_name):
     for category in json_data['images']:
         if json_data['images'][category] is None:
             if check_if_image_exists(bucket_name, category):
-                # If the image exists, use the existing link
                 public_url = f"https://storage.googleapis.com/{bucket_name}/{category}.png"
                 print(f"Found existing image for '{category}'. Using existing link.")
                 json_data['images'][category] = public_url
             else:
-                # Generate image URL
                 image_url = generate_image_with_pollinations(category)
                 
-                # Download the image
                 temp_file = download_image(image_url, category)
                 
-                # Remove the background using remove.bg API
                 temp_file_no_bg = remove_background_with_remove_bg(temp_file)
                 
                 if temp_file_no_bg is not None:
-                    # Upload image to GCS and get public URL
                     public_url = upload_image_to_gcs(bucket_name, category, temp_file_no_bg)
                     
-                    # Update JSON with the public URL
                     json_data['images'][category] = public_url
         else:
             print(f"Image for '{category}' is already present in JSON.")
     
     return json_data
 
-# End-to-end process
+
 def process_image_json(input_json, bucket_name):
-    # Step 1: Read the input JSON file
    
     json_data = input_json
     
-    # Extract only the "images" dictionary from the input
     images_data = {"images": json_data.get("images", {})}
 
     print("Input images data:")
     print(json.dumps(images_data, indent=2))
     print()
 
-    # Step 2: Process the JSON, generate images, and update with GCP links
     updated_json = process_json_and_generate_images(images_data, bucket_name)
     print("Updated images data:")
     output = json.dumps(updated_json, indent=2)
@@ -111,12 +99,8 @@ def process_image_json(input_json, bucket_name):
 
     print(f"Updated JSON written to: {output}")
 
-# Example usage
-# input_json_path = 'input.json'
-# output_json_path = 'output.json'
 bucket_name = 'mani_image_buckets'
 
-# Example input JSON (as per your example)
 sample_input = """{
     "images": {
         "apple": null,
