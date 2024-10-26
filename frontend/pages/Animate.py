@@ -65,6 +65,10 @@ async def call_generate(prompt):
     return await generate.generate(prompt)
 
 
+async def call_generate_video():
+    return await generate.generate_video()
+
+
 with st.form("chat_input_form"):
     inputCol, buttonCol = st.columns([6, 1], vertical_alignment="bottom")
 
@@ -80,13 +84,15 @@ with st.form("chat_input_form"):
 
     if prompt and submitted:
 
-        with st.spinner("Generating animation..."):
+        with st.spinner("Generating animation code..."):
             output = asyncio.run(call_generate(prompt))
-            print(output)
             code, transcript = output
 
+        with st.spinner("Generating video..."):
+            videoPath = asyncio.run(call_generate_video())
+
         st.video(
-            data="./backend/output/GTTSExample.mp4",
+            data=videoPath,
             format="video/mp4",
             autoplay=True,
         )

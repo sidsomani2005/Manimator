@@ -1,55 +1,79 @@
 from manim import *
-from manim_voiceover import VoiceoverScene
+from manim_voiceover import VoiceoverScene, VoiceoverTracker
 from manim_voiceover.services.gtts import GTTSService
+import os
+
 
 class MultiplicationExample(VoiceoverScene):
     def construct(self):
         self.set_speech_service(GTTSService(lang="en", tld="com"))
 
-        # Placeholders for images. Replace with actual image loading from GCP.
-        cookie_img = ImageMobject("cookie.png").scale(0.5) # Replace "cookie.png" with actual path or URL
-        box_img = ImageMobject("box.png").scale(0.7) # Replace "box.png" with actual path or URL
+        # Placeholder for images - Replace with actual image loading from GCP
+        cookie_img = os.path.join("./cookie.png")
+        plate_img = os.path.join("./plate.png")
 
-        # Create cookie objects
-        cookie1 = cookie_img.copy().shift(LEFT * 2)
-        cookie2 = cookie_img.copy()
-        cookie3 = cookie_img.copy().shift(RIGHT * 2)
+        cookie = ImageMobject(cookie_img).scale(0.3)
+        plate = ImageMobject(plate_img).scale(0.5)
 
-        # Animation for the first sentence
-        with self.voiceover(text="Multiplication is like a shortcut for adding the same number over and over again. Let's imagine we have some _cookies_.") as tracker:
-            self.play(FadeIn(cookie1), FadeIn(cookie2), FadeIn(cookie3))
+        # Positioning plates and cookies
+        plate1 = plate.copy()
+        plate2 = plate.copy().shift(2 * RIGHT)
+        plate3 = plate.copy().shift(4 * RIGHT)
 
-        # Create boxes and arrange cookies inside
-        box1 = box_img.copy().shift(LEFT * 3)
-        box2 = box_img.copy()
-        box3 = box_img.copy().shift(RIGHT * 3)
+        cookie1 = cookie.copy().shift(0.2 * UP)
+        cookie2 = cookie.copy().shift(0.2 * DOWN)
+        cookie3 = cookie.copy().shift(0.2 * RIGHT)
+        cookie4 = cookie.copy().shift(0.2 * LEFT)
 
-        with self.voiceover(text="Let's say we have 3 _boxes_, and each _box_ has 4 _cookies_ inside.") as tracker:
-            self.play(FadeIn(box1), FadeIn(box2), FadeIn(box3))
-            self.play(cookie1.animate.move_to(box1.get_center()),
-                       cookie2.animate.move_to(box2.get_center()),
-                       cookie3.animate.move_to(box3.get_center()))
-            # Duplicate and position remaining cookies
-            for i in range(3):
-                new_cookie = cookie_img.copy()
-                self.play(FadeIn(new_cookie.move_to(box1.get_center() + (i + 1) * UP * 0.5)))
-            for i in range(3):
-                new_cookie = cookie_img.copy()
-                self.play(FadeIn(new_cookie.move_to(box2.get_center() + (i + 1) * UP * 0.5)))
-            for i in range(3):
-                new_cookie = cookie_img.copy()
-                self.play(FadeIn(new_cookie.move_to(box3.get_center() + (i + 1) * UP * 0.5)))
+        cookies_plate1 = Group(cookie1, cookie2, cookie3, cookie4)
+        cookies_plate2 = cookies_plate1.copy().shift(2 * RIGHT)
+        cookies_plate3 = cookies_plate1.copy().shift(4 * RIGHT)
 
-        # Animation for the third and fourth sentences
-        equation = MathTex("3 \\times 4 = 12").shift(DOWN * 2)
-        with self.voiceover(text="So, we have 3 groups of 4 _cookies_. Instead of adding 4+4+4, we can multiply 3 times 4.") as tracker:
-            self.play(Create(equation))
-        with self.voiceover(text="3 times 4 simply means we are adding 4 to itself 3 times. And guess what? 3 times 4 equals 12, which means we have a total of 12 _cookies_.") as tracker:
-            pass  # No animation needed here, but you can add visual emphasis if desired
+        # Voiceover and animations
+        with self.voiceover(
+            text="Multiplication is like a shortcut for adding the same number over and over again."
+        ) as tracker:
+            self.wait(tracker.duration)
 
-        # Animation for the last sentence
-        with self.voiceover(text="That's it! Multiplication makes it much faster to count when we have groups of the same size.") as tracker:
-            self.play(FadeOut(box1), FadeOut(box2), FadeOut(box3), FadeOut(equation),
-                       *[FadeOut(mob) for mob in self.mobjects if isinstance(mob, ImageMobject)])
+        with self.voiceover(
+            text="Imagine you have a *_plate_* full of *_cookies_*."
+        ) as tracker:
+            self.play(FadeIn(plate1), FadeIn(cookies_plate1), run_time=tracker.duration)
+
+        with self.voiceover(
+            text="Let's say you have 3 *_plates_* and each *_plate_* has 4 *_cookies_* on it."
+        ) as tracker:
+            self.play(
+                FadeIn(plate2),
+                FadeIn(cookies_plate2),
+                FadeIn(plate3),
+                FadeIn(cookies_plate3),
+                run_time=tracker.duration,
+            )
+
+        with self.voiceover(
+            text="To find out how many *_cookies_* you have in total, you can use multiplication!"
+        ) as tracker:
+            self.wait(tracker.duration)
+
+        with self.voiceover(
+            text="Instead of adding 4 + 4 + 4, we can simply multiply 3 *_plates_* by 4 *_cookies_* per *_plate_*."
+        ) as tracker:
+            self.play(
+                ApplyWave(plate1),
+                ApplyWave(plate2),
+                ApplyWave(plate3),
+                ApplyWave(cookie1),
+                ApplyWave(cookie2),
+                ApplyWave(cookie3),
+                ApplyWave(cookie4),
+                run_time=tracker.duration,
+            )
+
+        with self.voiceover(
+            text="So, 3 times 4, written as 3 x 4, equals 12. That means you have a total of 12 *_cookies_*!"
+        ) as tracker:
+            all_cookies = Group(cookies_plate1, cookies_plate2, cookies_plate3)
+            self.play(Circle(all_cookies, color=YELLOW, run_time=tracker.duration))
 
         self.wait()
