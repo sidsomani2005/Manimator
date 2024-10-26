@@ -249,7 +249,7 @@ def remove_code_block_markers(text, language='json'):
 
 
 def final_flow(prompt):
-    initial_check = steps_agent("prompt")
+    initial_check = steps_agent(prompt)
     print(initial_check)
     next_check = steps_checking_agent(initial_check)
     print(next_check)
