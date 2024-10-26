@@ -1,6 +1,0 @@
-# This file is used internally by FFMPEG.
-file 'file:/Users/sidsomani/Desktop/manimator/media/videos/tester/480p15/partial_movie_files/ProjectileMotionAnimation/1185818338_1705760541_551318929.mp4'
-file 'file:/Users/sidsomani/Desktop/manimator/media/videos/tester/480p15/partial_movie_files/ProjectileMotionAnimation/624642324_359668860_2111370438.mp4'
-file 'file:/Users/sidsomani/Desktop/manimator/media/videos/tester/480p15/partial_movie_files/ProjectileMotionAnimation/624642324_776291726_614908421.mp4'
-file 'file:/Users/sidsomani/Desktop/manimator/media/videos/tester/480p15/partial_movie_files/ProjectileMotionAnimation/624642324_1849765041_142007321.mp4'
-file 'file:/Users/sidsomani/Desktop/manimator/media/videos/tester/480p15/partial_movie_files/ProjectileMotionAnimation/624642324_1141282389_1491541649.mp4'
