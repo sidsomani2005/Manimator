@@ -20,7 +20,7 @@ Your task is to take the user's prompt and generate a JSON response as per the f
 model = GenerativeModel(model_name="gemini-1.5-flash",  system_instruction=system_instruction)
 
 response = model.generate_content(
-    "Explain EigenValues"
+    "Explain addition to me"
 )
 
 print(response.text)
