@@ -3,7 +3,7 @@ from vertexai.generative_models import GenerativeModel
 import os
 from dotenv import load_dotenv
 import json
-
+from imagen import main
 load_dotenv()
 
 vertexai.init(project=os.getenv("PROJECT_ID"), location="us-central1")
@@ -23,38 +23,107 @@ def steps_agent(prompt: str):
     The values of this dictionary are null.
 
     Here is a sample of what you would output if the prompt was "explain addition":
-    { 
-        'title' : "Addition",
-        'images' : 
-        { 
-            'apple' : null,
+    {
+        "title": "Addition",
+        "images": {
+            "apple": null
         },
-        'steps' :
-        {
-            'Step 1: Initialize a canvas of size 800x600 pixels.' : null,
-            'Step 2: Set the size of each apple to 50x50 pixels.' : null,
-            'Step 3: Add Apple 1 at coordinates (100, 300).' : null,
-            'Step 4: Add Apple 2 at coordinates (200, 300).' : null,
-            'Step 5: Apply a fade-in effect lasting 0.5 seconds for each apple.' : null,
-            'Step 6: Add a plus sign at coordinates (250, 300) with a size of 50x50 pixels.' : null,
-            'Step 7: Display Apple 3 at coordinates (800, 300), Apple 4 at (900, 300), and Apple 5 at (1000, 300).' : null,
-            'Step 8: Move Apple 3 from (800, 300) to (350, 300) over 0.7 seconds.' : null,
-            'Step 9: Move Apple 4 from (900, 300) to (450, 300) over 0.7 seconds.' : null,
-            'Step 10: Move Apple 5 from (1000, 300) to (550, 300) over 0.7 seconds.' : null,
-            'Step 11: Apply a scale-in effect to the plus sign over 0.3 seconds.' : null,
-            'Step 12: Apply an ease-in effect to the movement of the apples.' : null,
-            'Step 13: Move Apple 1 to (100, 300) and Apple 2 to (200, 300).' : null,
-            'Step 14: Move Apple 3 to (300, 300), Apple 4 to (400, 300), and Apple 5 to (500, 300).' : null,
-            'Step 15: Animate the apples moving over 1 second with an ease-out effect and a bounce effect.' : null,
-            'Step 16: Add a text box displaying "2 + 3 = 5" at coordinates (350, 100).' : null,
-            'Step 17: Set the font size to 48px bold for the text.' : null,
+        "steps": {
+            "Step 1: Initialize a canvas of size 800x600 pixels.": null,
+            "Step 2: Set the size of each apple to 50x50 pixels.": null,
+            "Step 3: Add Apple 1 at coordinates (100, 300).": null,
+            "Step 4: Add Apple 2 at coordinates (200, 300).": null,
+            "Step 5: Apply a fade-in effect lasting 0.5 seconds for each apple.": null,
+            "Step 6: Add a plus sign at coordinates (250, 300) with a size of 50x50 pixels.": null,
+            "Step 7: Display Apple 3 at coordinates (800, 300), Apple 4 at (900, 300), and Apple 5 at (1000, 300).": null,
+            "Step 8: Move Apple 3 from (800, 300) to (350, 300) over 0.7 seconds.": null,
+            "Step 9: Move Apple 4 from (900, 300) to (450, 300) over 0.7 seconds.": null,
+            "Step 10: Move Apple 5 from (1000, 300) to (550, 300) over 0.7 seconds.": null,
+            "Step 11: Apply a scale-in effect to the plus sign over 0.3 seconds.": null,
+            "Step 12: Apply an ease-in effect to the movement of the apples.": null,
+            "Step 13: Move Apple 1 to (100, 300) and Apple 2 to (200, 300).": null,
+            "Step 14: Move Apple 3 to (300, 300), Apple 4 to (400, 300), and Apple 5 to (500, 300).": null,
+            "Step 15: Animate the apples moving over 1 second with an ease-out effect and a bounce effect.": null,
+            "Step 16: Add a text box displaying \"2 + 3 = 5\" at coordinates (350, 100).": null,
+            "Step 17: Set the font size to 48px bold for the text.": null
         }
-
     }
+
     """
 
     model = GenerativeModel(
         model_name="gemini-1.5-pro", system_instruction=system_instruction
+    )
+
+
+    response = model.generate_content(prompt)
+    return response.text
+
+def steps_checking_agent(prompt: str):
+    system_instruction = """
+    You are super reader that checks the work of another agent. You will be given a json input of the form below and output a similar JSON with some changes: 
+    { 
+        "title": "Addition",
+        "images": { 
+            "apple": null
+        },
+        "steps": {
+            "Step 1: Initialize a canvas of size 800x600 pixels.": null,
+            "Step 2: Set the size of each apple to 50x50 pixels.": null,
+            "Step 3: Add Apple 1 at coordinates (100, 300).": null,
+            "Step 4: Add Apple 2 at coordinates (200, 300).": null,
+            "Step 5: Apply a fade-in effect lasting 0.5 seconds for each apple.": null,
+            "Step 6: Add a plus sign at coordinates (250, 300) with a size of 50x50 pixels.": null,
+            "Step 7: Display Apple 3 at coordinates (800, 300), Apple 4 at (900, 300), and Apple 5 at (1000, 300).": null,
+            "Step 8: Move Apple 3 from (800, 300) to (350, 300) over 0.7 seconds.": null,
+            "Step 9: Move Apple 4 from (900, 300) to (450, 300) over 0.7 seconds.": null,
+            "Step 10: Move Apple 5 from (1000, 300) to (550, 300) over 0.7 seconds.": null,
+            "Step 11: Apply a scale-in effect to the plus sign over 0.3 seconds.": null,
+            "Step 12: Apply an ease-in effect to the movement of the apples.": null,
+            "Step 13: Move Apple 1 to (100, 300) and Apple 2 to (200, 300).": null,
+            "Step 14: Move Apple 3 to (300, 300), Apple 4 to (400, 300), and Apple 5 to (500, 300).": null,
+            "Step 15: Animate the apples moving over 1 second with an ease-out effect and a bounce effect.": null,
+            "Step 16: Add a text box displaying \"2 + 3 = 5\" at coordinates (350, 100).": null,
+            "Step 17: Set the font size to 48px bold for the text.": null
+        }
+    }
+
+
+    Your job is to check the images and steps dictionaries in the following order:
+        1) If you find any key in the images dictionary that SAID as a mathematical shape (arrow, circle, square) replace their value with "Manim" 
+        2) After all checks for the image dictionary are completed you will go to the steps and see where the any of the objects which are keys in the images dictionary are being used. Once found replace them with *_<objectkey>_* where objectkey is the actual key from the images dictionary.
+
+
+    For the example above your output would be: 
+    {
+        "title": "Addition",
+        "images": {
+            "apple": null
+        },
+        "steps": {
+            "Step 1: Initialize a canvas of size 800x600 pixels.": null,
+            "Step 2: Set the size of each apple to 50x50 pixels.": null,
+            "Step 3: Add *_apple_* 1 at coordinates (100, 300).": null,
+            "Step 4: Add *_apple_* 2 at coordinates (200, 300).": null,
+            "Step 5: Apply a fade-in effect lasting 0.5 seconds for each *_apple_*.": null,
+            "Step 6: Add a plus sign at coordinates (250, 300) with a size of 50x50 pixels.": null,
+            "Step 7: Display *_apple_* 3 at coordinates (800, 300), *_apple_* 4 at (900, 300), and *_apple_* 5 at (1000, 300).": null,
+            "Step 8: Move *_apple_* 3 from (800, 300) to (350, 300) over 0.7 seconds.": null,
+            "Step 9: Move *_apple_* 4 from (900, 300) to (450, 300) over 0.7 seconds.": null,
+            "Step 10: Move *_apple_* 5 from (1000, 300) to (550, 300) over 0.7 seconds.": null,
+            "Step 11: Apply a scale-in effect to the plus sign over 0.3 seconds.": null,
+            "Step 12: Apply an ease-in effect to the movement of the *_apple_*.": null,
+            "Step 13: Move *_apple_* 1 to (100, 300) and *_apple_* 2 to (200, 300).": null,
+            "Step 14: Move *_apple_* 3 to (300, 300), *_apple_* 4 to (400, 300), and *_apple_* 5 to (500, 300).": null,
+            "Step 15: Animate the *_apple_*s moving over 1 second with an ease-out effect and a bounce effect.": null,
+            "Step 16: Add a text box displaying \"2 + 3 = 5\" at coordinates (350, 100).": null,
+            "Step 17: Set the font size to 48px bold for the text.": null
+        }
+    }
+
+    """
+    model = GenerativeModel(
+        model_name="gemini-1.5-flash", system_instruction=system_instruction
     )
 
 
@@ -74,33 +143,31 @@ def audio_agent(prompt: str):
     - The `images` field is a dictionary where the keys are names of daily objects (e.g., 'apple', 'banana'). DO NOT WORRY ABOUT THIS DICTIONARY.
     - The 'steps' field is a dictionary where the keys are the specific steps to generate speech transcriptions on. HOWEVER, THE VALUES CORRESPONDING TO EACH STEP WILL BE NULL. THESE VALUES ARE WHAT YOU NEED TO FILL WITH SPEECH TRANSCRIPTIONS (REFER TO OUTPUT GUIDELINES)
     - Here is a sample of what the input would be for you to generate speech additions:
-        { 
-            'title' : "Addition",
-            'images' : 
-            { 
-                'apple' : null,
+        {
+            "title": "Addition",
+            "images": {
+                "apple": "https://storage.googleapis.com/path_to_apple_image.png"
             },
-            'steps' :
-            {
-                'Step 1: Initialize a canvas of size 800x600 pixels.' : null,
-                'Step 2: Set the size of each apple to 50x50 pixels.' : null,
-                'Step 3: Add Apple 1 at coordinates (100, 300).' : null,
-                'Step 4: Add Apple 2 at coordinates (200, 300).' : null,
-                'Step 5: Apply a fade-in effect lasting 0.5 seconds for each apple.' : null,
-                'Step 6: Add a plus sign at coordinates (250, 300) with a size of 50x50 pixels.' : null,
-                'Step 7: Display Apple 3 at coordinates (800, 300), Apple 4 at (900, 300), and Apple 5 at (1000, 300).' : null,
-                'Step 8: Move Apple 3 from (800, 300) to (350, 300) over 0.7 seconds.' : null,
-                'Step 9: Move Apple 4 from (900, 300) to (450, 300) over 0.7 seconds.' : null,
-                'Step 10: Move Apple 5 from (1000, 300) to (550, 300) over 0.7 seconds.' : null,
-                'Step 11: Apply a scale-in effect to the plus sign over 0.3 seconds.' : null,
-                'Step 12: Apply an ease-in effect to the movement of the apples.' : null,
-                'Step 13: Move Apple 1 to (100, 300) and Apple 2 to (200, 300).' : null,
-                'Step 14: Move Apple 3 to (300, 300), Apple 4 to (400, 300), and Apple 5 to (500, 300).' : null,
-                'Step 15: Animate the apples moving over 1 second with an ease-out effect and a bounce effect.' : null,
-                'Step 16: Add a text box displaying "2 + 3 = 5" at coordinates (350, 100).' : null,
-                'Step 17: Set the font size to 48px bold for the text.' : null,
+            "steps": {
+                "Step 1: Initialize a canvas of size 800x600 pixels.": null,
+                "Step 2: Set the size of each apple to 50x50 pixels.": null,
+                "Step 3: Add Apple 1 at coordinates (100, 300).": null,
+                "Step 4: Add Apple 2 at coordinates (200, 300).": null,
+                "Step 5: Apply a fade-in effect lasting 0.5 seconds for each apple.": null,
+                "Step 6: Add a plus sign at coordinates (250, 300) with a size of 50x50 pixels.": null,
+                "Step 7: Display Apple 3 at coordinates (800, 300), Apple 4 at (900, 300), and Apple 5 at (1000, 300).": null,
+                "Step 8: Move Apple 3 from (800, 300) to (350, 300) over 0.7 seconds.": null,
+                "Step 9: Move Apple 4 from (900, 300) to (450, 300) over 0.7 seconds.": null,
+                "Step 10: Move Apple 5 from (1000, 300) to (550, 300) over 0.7 seconds.": null,
+                "Step 11: Apply a scale-in effect to the plus sign over 0.3 seconds.": null,
+                "Step 12: Apply an ease-in effect to the movement of the apples.": null,
+                "Step 13: Move Apple 1 to (100, 300) and Apple 2 to (200, 300).": null,
+                "Step 14: Move Apple 3 to (300, 300), Apple 4 to (400, 300), and Apple 5 to (500, 300).": null,
+                "Step 15: Animate the apples moving over 1 second with an ease-out effect and a bounce effect.": null,
+                "Step 16: Add a text box displaying \"2 + 3 = 5\" at coordinates (350, 100).": null,
+                "Step 17: Set the font size to 48px bold for the text.": null
             }
-        } 
+        }
 
 
     **Output**: 
@@ -122,12 +189,12 @@ def audio_agent(prompt: str):
 
     Here is a sample output:
     {
-        'title' : "Subtraction",
-        'images' : 
+        "title" : "Subtraction",
+        "images" : 
         {
-            'cookie': "https://storage.googleapis.com/path_to_cookie_image.png"
+            "cookie": "https://storage.googleapis.com/path_to_cookie_image.png"
         },
-        'steps' : 
+        "steps" : 
         {
             "Step 1: Initialize a canvas of size 800x600 pixels." : "Let's explore subtraction.",
             "Step 2: Set the size of each cookie to 40x40 pixels." : "Imagine you have a plate with 5 cookies on it.",
@@ -153,90 +220,46 @@ def audio_agent(prompt: str):
     return response.text
 
 
-def steps_checking_agent(prompt: str):
-    system_instruction = """
-    You are super reader that checks the work of another agent. You will be given a json input of the form below and output a similar JSON with some changes: 
-    { 
-        'title' : "Addition",
-        'images' : 
-        { 
-            'apple' : null,
-        },
-        'steps' :
-        {
-            'Step 1: Initialize a canvas of size 800x600 pixels.' : null,
-            'Step 2: Set the size of each apple to 50x50 pixels.' : null,
-            'Step 3: Add Apple 1 at coordinates (100, 300).' : null,
-            'Step 4: Add Apple 2 at coordinates (200, 300).' : null,
-            'Step 5: Apply a fade-in effect lasting 0.5 seconds for each apple.' : null,
-            'Step 6: Add a plus sign at coordinates (250, 300) with a size of 50x50 pixels.' : null,
-            'Step 7: Display Apple 3 at coordinates (800, 300), Apple 4 at (900, 300), and Apple 5 at (1000, 300).' : null,
-            'Step 8: Move Apple 3 from (800, 300) to (350, 300) over 0.7 seconds.' : null,
-            'Step 9: Move Apple 4 from (900, 300) to (450, 300) over 0.7 seconds.' : null,
-            'Step 10: Move Apple 5 from (1000, 300) to (550, 300) over 0.7 seconds.' : null,
-            'Step 11: Apply a scale-in effect to the plus sign over 0.3 seconds.' : null,
-            'Step 12: Apply an ease-in effect to the movement of the apples.' : null,
-            'Step 13: Move Apple 1 to (100, 300) and Apple 2 to (200, 300).' : null,
-            'Step 14: Move Apple 3 to (300, 300), Apple 4 to (400, 300), and Apple 5 to (500, 300).' : null,
-            'Step 15: Animate the apples moving over 1 second with an ease-out effect and a bounce effect.' : null,
-            'Step 16: Add a text box displaying "2 + 3 = 5" at coordinates (350, 100).' : null,
-            'Step 17: Set the font size to 48px bold for the text.' : null,
-        }
 
-    }
-
-    Your job is to check the images and steps dictionaries in the following order:
-        1) If you find any key in the images dictionary that SAID as a mathematical shape (arrow, circle, square) replace their value with "Manim" 
-        2) After all checks for the image dictionary are completed you will go to the steps and see where the any of the objects which are keys in the images dictionary are being used. Once found replace them with *_<objectkey>_* where objectkey is the actual key from the images dictionary.
-
-
-    For the example above your output would be: 
-            { 
-        'title' : "Addition",
-        'images' : 
-        { 
-            'apple' : null,
-        },
-        'steps' :
-        {
-            'Step 1: Initialize a canvas of size 800x600 pixels.' : null,
-            'Step 2: Set the size of each apple to 50x50 pixels.' : null,
-            'Step 3: Add *_apple_* 1 at coordinates (100, 300).' : null,
-            'Step 4: Add *_apple_* 2 at coordinates (200, 300).' : null,
-            'Step 5: Apply a fade-in effect lasting 0.5 seconds for each *_apple_*.' : null,
-            'Step 6: Add a plus sign at coordinates (250, 300) with a size of 50x50 pixels.' : null,
-            'Step 7: Display *_apple_* 3 at coordinates (800, 300), *_apple_* 4 at (900, 300), and *_apple_* 5 at (1000, 300).' : null,
-            'Step 8: Move *_apple_* 3 from (800, 300) to (350, 300) over 0.7 seconds.' : null,
-            'Step 9: Move *_apple_* 4 from (900, 300) to (450, 300) over 0.7 seconds.' : null,
-            'Step 10: Move *_apple_* 5 from (1000, 300) to (550, 300) over 0.7 seconds.' : null,
-            'Step 11: Apply a scale-in effect to the plus sign over 0.3 seconds.' : null,
-            'Step 12: Apply an ease-in effect to the movement of the *_apple_*.' : null,
-            'Step 13: Move *_apple_* 1 to (100, 300) and *_apple_* 2 to (200, 300).' : null,
-            'Step 14: Move *_apple_* 3 to (300, 300), *_apple_* 4 to (400, 300), and *_apple_* 5 to (500, 300).' : null,
-            'Step 15: Animate the *_apple_*s moving over 1 second with an ease-out effect and a bounce effect.' : null,
-            'Step 16: Add a text box displaying "2 + 3 = 5" at coordinates (350, 100).' : null,
-            'Step 17: Set the font size to 48px bold for the text.' : null,
-        }
-
-    }
+def remove_code_block_markers(text, language='json'):
     """
-    model = GenerativeModel(
-        model_name="gemini-1.5-flash", system_instruction=system_instruction
-    )
+    Removes Markdown code block markers from the given text.
+
+    Args:
+        text (str): The input string containing Markdown code block.
+        language (str): The language specifier after the opening backticks.
+
+    Returns:
+        str: The cleaned string without code block markers.
+    """
+    lines = text.strip().split('\n')
+    
+    if lines and lines[0].startswith(f'```{language}'):
+        lines = lines[1:] 
+    else:
+        print("Warning: The input does not start with the expected code block marker.")
+    
+    if lines and lines[-1].strip() == '```':
+        lines = lines[:-1] 
+    else:
+        print("Warning: The input does not end with the expected code block marker.")
+    
+    cleaned_text = '\n'.join(lines)
+    return cleaned_text
 
 
-    response = model.generate_content(prompt)
-    return response.text
-
-
-
-if __name__ == "__main__":
-    initial_check = steps_agent("eigenvalues")
+def final_flow(prompt):
+    initial_check = steps_agent("prompt")
     print(initial_check)
     next_check = steps_checking_agent(initial_check)
     print(next_check)
-    print(audio_agent(next_check))
+    next_check = remove_code_block_markers(next_check, "json")
+    next_check = main(next_check)
+    print(next_check)
+    return (audio_agent(next_check))
 
+if __name__ == "__main__":
+    print(final_flow("division"))
 
 
 
