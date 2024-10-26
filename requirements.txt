@@ -1,1 +1,2 @@
-
+st_theme==1.2.3
+streamlit==1.39.0
