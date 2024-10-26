@@ -22,6 +22,7 @@ def main_prompt(prompt: str):
         model_name="gemini-1.5-flash", system_instruction=system_instruction
     )
 
+
     response = model.generate_content(prompt)
     return response.text
 
