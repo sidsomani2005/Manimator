@@ -1,48 +1,50 @@
 import streamlit as st
 from streamlit_theme import st_theme
-import base64
+import base64, sys, asyncio
+from pathlib import Path
 
-theme = st_theme()
-
-LOGO = "./frontend/assets/logo.png"
-
-if theme["base"] == "dark":
-    LOGO = "./frontend/assets/inverted-logo.png"
+sys.path.append(str(Path(__file__).resolve().parent.parent.parent / "backend"))
+generate = __import__("generate")
+LOGO = (
+    "./frontend/assets/logo.png"
+    if st_theme()["base"] != "dark"
+    else "./frontend/assets/inverted-logo.png"
+)
 
 st.markdown(
     """
     <style>
-      .header-container {
-          display: flex;
-          width: 100%;
-          justify-content: center;
-          align-items: center;
-          gap: 10px;
-      }
-      .logo-text {
-          font-size: 40px;
-          font-weight: bold;
-      }
-      .logo-img {
-          float:right;
-          width: 50px;
-          height: 50px;
-          margin-bottom: 22px;
-      }
-      .empty-container {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          height: 180px;
-      }
-      .empty-text {
-          font-size: 24px;
-          font-weight: bold;
-          opacity: 0.2;
-      }
-      .stForm {
+    .header-container {
+        display: flex;
+        width: 100%;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+    }
+    .logo-text {
+        font-size: 40px;
+        font-weight: bold;
+    }
+    .logo-img {
+        float:right;
+        width: 50px;
+        height: 50px;
+        margin-bottom: 22px;
+    }
+    .empty-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 180px;
+    }
+    .empty-text {
+        font-size: 24px;
+        font-weight: bold;
+        opacity: 0.2;
+    }
+    .stForm {
         border: none;
-      }
+    }
     </style>
     """,
     unsafe_allow_html=True,
@@ -57,6 +59,10 @@ st.markdown(
     """,
     unsafe_allow_html=True,
 )
+
+
+async def call_generate(prompt):
+    return await generate.generate(prompt)
 
 
 with st.form("chat_input_form"):
@@ -74,8 +80,15 @@ with st.form("chat_input_form"):
 
     if prompt and submitted:
 
+        with st.spinner("Generating animation..."):
+            path = asyncio.run(call_generate(prompt))
+
+        st.write(path)
+
         st.video(
-            data="./backend/output/GTTSExample.mp4", format="video/mp4", autoplay=True
+            data="./backend/output/GTTSExample.mp4",
+            format="video/mp4",
+            autoplay=True,
         )
         (
             transcriptTab,
