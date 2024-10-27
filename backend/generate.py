@@ -103,9 +103,9 @@ async def generate(
         )
         print("New code generated. Regenerating video...")
         return await generate(user_prompt, replaceCode=newCode, reuseMetadata=metadata)
-    else:
-        # review the videa for quality assurance
-        video_path = video_checking_agent(video_path, metadata_json)
+    # else:
+    # review the videa for quality assurance
+    # video_path = video_checking_agent(video_path, code, metadata_json)
     return (code, transcript, video_path)
 
 

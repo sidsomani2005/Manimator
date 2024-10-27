@@ -16,6 +16,7 @@ def generate_image_with_imagen(object_name):
     """
     prompt = (
         f"Create a {object_name} in a clipart style with a white background. "
+        f"If the image is of something that contains objects, make sure that the object is empty"
         f"The {object_name} should have an animated, cartoon-like appearance featuring "
         f"clear, bold lines and vibrant colors. Ensure the design is simple, playful, "
         f"and resembles traditional clipart illustrations."
@@ -160,7 +161,7 @@ def process_image_json(input_json, bucket_name):
 def main(sample_input):
     bucket_name = 'mani_image_buckets'
     
-    input_json = json.loads(sample_input)
+    input_json = sample_input
     updated_json = process_image_json(input_json, bucket_name)
     
     input_json["images"] = updated_json["images"]
