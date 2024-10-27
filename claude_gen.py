@@ -6,9 +6,15 @@ import json
 from imagen import main
 load_dotenv()
 import copy
+from anthropic import AnthropicVertex
+import anthropic
+
 
 vertexai.init(project=os.getenv("PROJECT_ID"), location="us-central1")
-
+client = anthropic.Anthropic(
+    # defaults to os.environ.get("ANTHROPIC_API_KEY")
+    api_key=os.getenv("ANTHROPIC_API")
+)
 
 def steps_agent(prompt: str):
     system_instruction = """
@@ -17,19 +23,16 @@ def steps_agent(prompt: str):
     You are an assistant that generates SPECIFIC instructions for an animation that explains a particular concept and returns JSON response consisting of "titles", "images", "srt", and "info" fields.
 
     - The "title" field is a short title of the concept you are making the animation for. (eg Addition, Subtraction, EigenValues) Be super concise and direct.
-    - The "images" field is a dictionary with keys being names of daily object used in the explanation (e.g., 'apple', 'banana') and values being null.
-    - The "info" field is a dictionary with keys being the timestamps for the voiceover and values being DETAILED steps on how to draw and animate the concept being explained at that timestamp. For example, when explaining projectile motion,
-      there could be a step to draw a ball at the top of the screen. Then another couple of steps to animate it moving downwards in a parabolic path. In your steps, use the images that were generated above. Adhere to mathematical logic and physics. 
+    - The "images" field is a dictionary with keys being names of objects used in the explanation and values being null.
+    - The "info" field is a dictionary with keys being the timestamps for the voiceover and values being steps on how to draw and animate the concept being explained at that timestamp. Adhere to mathematical logic and physics. 
       If there are no concepts being explained at a timestamp, then the value should be an empty string. USE AS MANY STEPS AS YOU NEED. 
-      IF YOU ARE USING AN IMAGE NO NEED TO DESCRIBE IT.
     - The "srt" field is a transcript in an SRT format for a one-person voiceover with timestamps explaining the concept.
 
-    THE "info" FIELD SHOULD BE AS SIMPLE AS POSSIBLE TO UNDERSTAND WITH THE LEAST AMOUT ON MOVEMENTS POSSIBLE BUT YOU MUST DESCRIBE EACH MOVEMENT. 
    
       
 
-    Your task is to take the user's prompt and generate a JSON response as per the format above, using simple daily objects in the explanation.
-
+    Your task is to take the user's prompt and generate a JSON response as per the format above.
+    When it comes to deciding the images, if you believe the overall task is complicated assign all the values as "Manim", else use daily objects and keep the value as null.
 
     Here is a sample of the format you should output in:
     {
@@ -47,16 +50,21 @@ def steps_agent(prompt: str):
         }
         
     }
+    MAKE SURE YOU OUTPUT A VALID JSON
 
     """
 
-    model = GenerativeModel(
-        model_name="gemini-1.5-pro", system_instruction=system_instruction
-    )
+    message = client.messages.create(
+    model="claude-3-5-sonnet-20241022",
+    max_tokens=1024,
+    system=system_instruction,
+    messages=[
+        {"role": "user", "content": prompt}
+    ]
+    ),
+   
 
-
-    response = model.generate_content(prompt)
-    return response.text
+    return message[0].content[0].text
 
 def steps_checking_agent(prompt: str):
     system_instruction = """
@@ -75,7 +83,7 @@ def steps_checking_agent(prompt: str):
 
 
     Your job is to check the images and info dictionaries in the following order:
-        1) If you find any key in the images dictionary that SAID as a mathematical shape (arrow, circle, square) replace their value with "Manim" 
+        1) If you find any key in the images dictionary that SAID as a mathematical shape (arrow, circle, square) replace their value with "Manim". DO NOT ADD ANY IMAGES TO THE DICTIONARY
         2) After all checks for the image dictionary are completed you will go to the info dictionary and see where the any of the objects which are keys in the images dictionary are being used. Once found replace them with *_<objectkey>_* where objectkey is the actual key from the images dictionary.
 
     You will then return the updated json.
@@ -136,7 +144,6 @@ def manimator(data: str):
    
 
     **Output Format:**
-    - DO NOT USE VGROUP
     - Provide the complete Manim Python code as plain text.
     - Do not include any explanations outside the code.
     - Do not include any stray characters.
@@ -170,26 +177,34 @@ def manimator(data: str):
 
 
     **CRITICAL GUIDELINES: MUST FOLLOW**
-    - **DONT USE VGROUP IN YOUR CODE**
+    - **DO NOT USE VGROUP**
+    - **USE THE LATEST MANIM VERSION**
+    - **TRY AND MINIMIZE REPITITION IN YOUR SPEECH**
+    - **MAKE SURE THE CODE WORKS**
     - **DO NOT USE ANY IMAGES OTHER THAN THE ONES IN THE IMAGE DICTIONARY PROVIDED**
     - **DO NOT ADD ANY AUDIO OTHER THAN THE VOICEOVER**
-    - **Color Code:** ENSURE THAT THE BACKGROUND IS ALWAYS BLACK AND THE TEXT IS ALWAYS WHITE.
+    - **Color Code:** ENSURE THAT THE BACKGROUND IS ALWAYS WHITW AND THE TEXT IS ALWAYS BLACK.
     - **Sequence of image/text:** ensure that the text is of slightly smaller font size ALWAYS and NEVER overlaps with the other images. THIS IS EXTREMELY IMPORTANT - ESPECIALLY THE OVERLAP ISSUE.
     - **Object Sizing:** SCALE EACH IMAGE RELATIVELY SINCE THEY ARE OF THE SAME SIZE.
-    - **Object Placement:** Ensure that objects stay WITHIN 50 PIXELS ON EACH SIDE OF THE BOUNDS OF THE CANVAS. 
-    - **Mathematical Equations:** if mathematical or arithmetic equations are being written in text, POSITION THEM AWAY FROM IMAGES AND KEEP THEM IN ONE HORIZONTAL LINE - ENSURE THAT THEY DONT TRAIL OFF THE END OF THE CANVAS.
+    - **Object Placement:** Make sure each object is placed properly relative to other objects and nothing overlaps.
+    - **Mathematical Equations:** if mathematical or arithmetic equations are being written in text, POSITION THEM AWAY FROM OTHER OBJECTS AND KEEP THEM IN ONE HORIZONTAL LINE - ENSURE THAT THEY DONT TRAIL OFF THE END OF THE CANVAS.
 
    
     """
 
 
-    model = GenerativeModel(
-        model_name="gemini-1.5-pro", system_instruction=system_instruction
-    )
+    message = client.messages.create(
+    model="claude-3-5-sonnet-20241022",
+    max_tokens=3000,
+    system=system_instruction,
+    messages=[
+        {"role": "user", "content": data}
+    ]
+    ),
 
-    references = load_references()
-    response = model.generate_content([data, references])
-    return response.text
+    # references = load_references()
+    # response = model.generate_content([data, references])
+    return message[0].content[0].text
 
 
 
@@ -225,8 +240,8 @@ def remove_code_block_markers(text, language='json'):
 def final_flow(prompt):
     initial_check = steps_agent(prompt)
     print(initial_check)
-    next_check = remove_code_block_markers(initial_check, "json")
-    step_json = json.loads(next_check)
+    # next_check = remove_code_block_markers(initial_check, "json")
+    step_json = json.loads(initial_check)
     clone_json = copy.deepcopy(step_json)
     del clone_json["srt"]
     del clone_json["title"]
@@ -245,7 +260,7 @@ def final_flow(prompt):
 
 
 if __name__ == "__main__":
-    print(final_flow("differentian"))
+    print(final_flow("multiplication"))
 
 
 

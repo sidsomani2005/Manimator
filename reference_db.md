@@ -505,11 +505,6 @@ def change_bar_values(self, values):
     for bar, value in zip(self.bars, values):
         bar.set_value(value)
 
-# get_bar_labels
-def get_bar_labels(self):
-    return VGroup(*[
-        bar.get_label() for bar in self.bars
-    ])
 
 # update_path
 def update_path(self):
