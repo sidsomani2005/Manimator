@@ -1,6 +1,6 @@
 import streamlit as st
 from streamlit_theme import st_theme
-import base64, sys, asyncio
+import base64, sys, asyncio, json
 from pathlib import Path
 
 sys.path.append(str(Path(__file__).resolve().parent.parent.parent / "backend"))
@@ -116,8 +116,9 @@ def update_state(new_state):
 async def call_generate(prompt, callback):
     output = await generate.generate(prompt, callback=callback)
     code, transcript, videoPath = output
+    transcript = json.loads(transcript)
     print(transcript, videoPath)
-    return output
+    return (code, transcript, videoPath)
 
 
 with st.form("chat_input_form"):

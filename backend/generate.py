@@ -1,9 +1,8 @@
 import asyncio, os, json, subprocess
-from speech_gen import (
+from claude_gen import (
     final_flow,
     remove_code_block_markers,
     error_checking_agent,
-    video_checking_agent,
 )
 
 
@@ -60,17 +59,15 @@ async def generate_video() -> tuple[str, str]:
     video_file = video_files[0]
     video_path = os.path.join(resolution_dir, video_file)
     return (video_path, "")
-    # return "./backend/output/GTTSExample.mp4"
 
 
-# returns path to the generated video
 async def generate(
     user_prompt, replaceCode=None, reuseMetadata=None, callback=None
 ) -> tuple[str, str]:
     if callback:
         callback("Generating Metadata...")
     if replaceCode is None or reuseMetadata is None:
-        metadata, code = final_flow(user_prompt, callback=callback)
+        metadata, code = final_flow(user_prompt)
     else:
         metadata = reuseMetadata
         code = replaceCode
@@ -93,11 +90,13 @@ async def generate(
     output_dir = os.path.join(current_dir, "output")
     os.makedirs(output_dir, exist_ok=True)
     file_path = os.path.join(output_dir, "manim_script.py")
-    with open(file_path, "w") as file:
+    with open(file_path, "w", encoding="utf-8") as file:
         file.write(code)
     print("Manim script generated.")
     print(metadata_json)
+    print("Generating video...")
     video_path, err_msg = await generate_video()
+    err_msg = ""
     print(video_path, err_msg)
     if video_path == "" and err_msg != "":
         if callback:
@@ -119,8 +118,3 @@ async def generate(
     if callback:
         callback("Almost done...")
     return (code, transcript, video_path)
-
-
-# if __name__ == "__main__":
-#     asyncio.run(generate("explain division"))
-#     asyncio.run(generate_video())

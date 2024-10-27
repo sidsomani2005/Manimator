@@ -16,7 +16,6 @@ def generate_image_with_imagen(object_name):
     """
     prompt = (
         f"Create a {object_name} in a clipart style with a white background. "
-        f"If the image is of something that contains objects, make sure that the object is empty"
         f"The {object_name} should have an animated, cartoon-like appearance featuring "
         f"clear, bold lines and vibrant colors. Ensure the design is simple, playful, "
         f"and resembles traditional clipart illustrations."
@@ -32,9 +31,14 @@ def generate_image_with_imagen(object_name):
             number_of_images=1,
             safety_filter_level="block_only_high",
             person_generation="allow_adult",
-            aspect_ratio="1:1",  # 512x512 pixels
-            negative_prompt="",   # Add any negative prompts if needed
+            aspect_ratio="1:1",  
+            negative_prompt="",   
         )
+        
+        # Check if any images were returned
+        if not result.images:
+            print(f"No images were returned by Imagen for '{object_name}'. Please check the prompt or try again.")
+            return None
         
         # Extract the PIL image from the result
         image = result.images[0]._pil_image
@@ -49,12 +53,11 @@ def generate_image_with_imagen(object_name):
     except Exception as e:
         print(f"Error generating image for '{object_name}': {e}")
         return None
-
 def remove_background_with_remove_bg(image_path):
     """
     Removes the background from the image using the remove.bg API.
     """
-    REMOVE_BG_API_KEY = "ctrgJN5nvYBKMB4DAZU1NKqt"  # Replace with your actual API key
+    REMOVE_BG_API_KEY = os.getenv("BG_REMOVE_API")  # Replace with your actual API key
 
     with open(image_path, 'rb') as image_file:
         response = requests.post(
