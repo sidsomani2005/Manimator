@@ -1,5 +1,10 @@
 import asyncio, os, json, subprocess
-from speech_gen import final_flow, remove_code_block_markers, error_checking_agent
+from speech_gen import (
+    final_flow,
+    remove_code_block_markers,
+    error_checking_agent,
+    video_checking_agent,
+)
 
 
 async def generate_video() -> tuple[str, str]:
@@ -69,12 +74,15 @@ async def generate(
         code = replaceCode
 
     metadata_json = json.loads(remove_code_block_markers(metadata))
-    steps = metadata_json["steps"]
-    transcript = ""
-    for step in steps:
-        if steps[step] is not None:
-            transcript += steps[step] + "\n\n"
-    transcript = transcript[:-2]
+
+    # steps = metadata_json["steps"]
+    # transcript = ""
+    # for step in steps:
+    #     if steps[step] is not None:
+    #         transcript += steps[step] + "\n\n"
+    # transcript = transcript[:-2]
+
+    transcript = metadata_json["srt"]
 
     code = remove_code_block_markers(code, language="python")
     current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -95,6 +103,9 @@ async def generate(
         )
         print("New code generated. Regenerating video...")
         return await generate(user_prompt, replaceCode=newCode, reuseMetadata=metadata)
+    else:
+        # review the videa for quality assurance
+        video_path = video_checking_agent(video_path, metadata_json)
     return (code, transcript, video_path)
 
 

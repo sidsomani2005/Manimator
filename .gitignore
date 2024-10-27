@@ -1,3 +1,4 @@
 .env
 mani-439723-c5c9080e558d.json
 /backend/output/
+/backend/legacy_prompt_gen.py

@@ -367,31 +367,38 @@ def error_checking_agent(
     return response.text
 
 
-# def video_checking_agent(video: str, subject: str, code: str):
-#     video_file = Part.from_uri(
-#         uri=video,
-#         mime_type="video/mp4",
-#     )
-#     system_instruction = (
-#         """
-#     You are a checking agent that checks Manim python code with or without a video and with or without errors"""
-#         + subject
-#         + """.
-#     You are given the video and the manim code to generate the video. Your job is to correct the manim code so the video
-#     is correct and as intended. You must make sure that the concept is explained properly. You will only return manim code
-#     in the same format it was given to you. Dont explain anything just return the code.
-#     """
-#     )
-#     contents = [
-#         video_file,
-#         "The video is attached and here is the code used to generate the video:" + code,
-#     ]
-#     model = GenerativeModel(
-#         model_name="gemini-1.5-pro", system_instruction=system_instruction
-#     )
+def video_checking_agent(video: str, code: str, metadata):
+    video_file = Part.from_uri(
+        uri=video,
+        mime_type="video/mp4",
+    )
+    system_instruction = (
+        """
+    You are a quality assurance agent that reviews Manim python code and the video it generates. The video is meant to explain the concept of """
+        + metadata["title"]
+        + """.
+    You have to make sure the concept is explained properly through the video.
+    If the video has any elements that are being drawn on top of each other or are not clearly visiible, your job is the correct the Manim python code. 
+    If you believe the video has no issues, you can return the exact same code without any changes.
+    You are given the Manim code that was used to generate the video, the video that was generated, and a json containing the following fields:
+    - The 'title' field is a short title of the concept you are making the animation for.
+    - The 'images' field is a dictionary with keys being names of daily object used in the animation (e.g., 'football', 'apple') and values are the relative path to the images.
+    - The 'srt' field is a string containing the speech transcriptions for each respective step and the timestamps for the voiceover.
+    - The 'info' field is the most important field you should pay attention to. It contains about exactly how to animate the elements. Try to adhere to what it says and make sure all elements are visible in the screen.
+    You must make sure that the concept is explained properly.
+    You will only return python Manim code. Do not explain anything. Only return the revised code file.
+    """
+    )
+    contents = [
+        video_file,
+        "The video is attached and here is the code used to generate the video:" + code,
+    ]
+    model = GenerativeModel(
+        model_name="gemini-1.5-pro", system_instruction=system_instruction
+    )
 
-#     response = model.generate_content(contents)
-#     return response.text
+    response = model.generate_content(contents)
+    return response.text
 
 
 def download_images(metadata: str):
