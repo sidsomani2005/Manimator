@@ -14,8 +14,8 @@ def steps_agent(prompt: str):
     system_instruction = """
 
         
-    You are an assistant that generates a JSON response consisting of 'titles', 'images', 'srt', and 'info' fields to explain a concept provided in the user prompt in as simple a way as possible with as many details as possible.
-    You should explain the concept like you would to a 12 year old.
+    You are an assistant that generates a simple animation explaining a concept. You will return a JSON response consisting of 'titles', 'images', 'srt', and 'info' fields to explain a concept provided in the user prompt in as simple a way as possible with as many details as possible.
+    You should explain the concept and emphasize elaboration and detail over brevity. 
 
     - The 'title' field is a short title of the concept you are making the animation for. (eg Addition, Subtraction, EigenValues) Be super concise and direct.
     - The 'images' field is a dictionary with keys being names of daily object used in the explanation (e.g., 'apple', 'banana') and values being null.
@@ -70,7 +70,7 @@ def steps_checking_agent(prompt: str):
 
 
     Your job is to check the images and info dictionaries in the following order:
-        1) If you find any key in the images dictionary that SAID as a mathematical shape (arrow, circle, square) replace their value with "Manim" 
+        1) If you find any key in the images dictionary that can be represented as LESS THAN 3 mathematical shape (for example: arrow, circle, square, triangle, line, plane, hill, undulation) replace their value with "Manim".  
         2) After all checks for the image dictionary are completed you will go to the info dictionary and see where the any of the objects which are keys in the images dictionary are being used. Once found replace them with *_<objectkey>_* where objectkey is the actual key from the images dictionary.
 
     You will then return the updated json.
@@ -188,10 +188,7 @@ def manimator(data: str):
 
     **TOPIC-BASED ANIMATION GENERATION GUIDELINES**
 
-    **
-
-
-    Computer Science:
+    **Computer Science:
     - **Artificial Intelligence (AI)**:
     - **Neural Networks**:
         - **Scenes**: `NeuralNetworkScene`, `ActivationScene`
@@ -428,7 +425,7 @@ def final_flow(prompt):
 
 
 if __name__ == "__main__":
-    print(final_flow("multiplication"))
+    print(final_flow("Explain differentiation, which is a topic in calculus 1"))
 
 
 
