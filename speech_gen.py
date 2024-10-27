@@ -85,52 +85,56 @@ def steps_checking_agent(prompt: str):
     return response.text
 
 
+def load_references():
+    with open("reference_db.md", "r") as f:  
+        references = f.read()
+    return references
+
 
 def manimator(data: str):
-    
-
     system_instruction = """
     You are professional at Manim version (0.18.0) a python library used to make animations. 
     You have the entire manim library at your disposal. Feel free to check the internet for any confusion you might have.
 
-    - **Input:** You will receive a JSON object with three fields: 'title', 'images', and 'steps'
-        - The 'title' field is a short title of the concept you are making the animation for. (eg Addition, Subtraction, EigenValues) Be super concise and direct.
-        - The 'images' field is a dictionary with keys being names of daily object used in the explanation (e.g., 'apple', 'banana') and values being null.
-        - The 'srt' field is a transcript in an SRT format for a one-person voiceover with timestamps explaining the concept. 
-        - The 'info' field is a dictionary with keys being the timestamps from the generated SRT file and values being detailed steps on how to draw and animate the concept being explained at that timestamp. For example, when explaining projectile motion,
-        there could be a step to draw a ball at the top of the screen and animate it moving downwards in a parabolic path. In your steps, use the images that were generated above. Adhere to mathematical logic and physics. If there are no concepts being explained at a timestamp, then the value should be an empty string.
-
-    - A sample JSON file that the code needs to be generated on is as follows: 
-   {
-        "title": "<Add Title>",
-        "images": {
-            "<Any Item>": null
-            <more as needed>,
-        },
-        "srt": {
-        <Add SRT>
-        },
-        "info":{
-            "<timestamp1>":<Action>,
-            <more as needed>,
-        }
-        
-    }
     **Your Task:**
-    Generate Manim code that performs the animation detailed in info with a voiceover from the srt:
-    - The code generated should provide an animation that sequentially depicts each step in chronological order. 
+
+    - **Input:** You will receive a JSON object with three fields: 'title', 'images', and 'steps'
+    - The 'title' field is a short title of the concept you are making the animation for. (eg Addition, Subtraction, EigenValues) Be super concise and direct.
+    - The `images` field is a dictionary where the keys are names of daily objects (e.g., 'apple', 'banana') and the values are links to images stored in GCP buckets.
+    - The 'steps' field is a dictionary where the keys are the specific steps to generate code on, and the corresponding value is a transcript in speech  format for a one-person voiceover with timestamps explaining a concept. Objects from the `images` dictionary used in the text are denoted by `_*object_name*_`. 
+    - A sample JSON file that the code needs to be generated on is as follows: 
+    {
+        'title' : "Subtraction",
+        'images' : 
+        {
+            'cookie': "https://storage.googleapis.com/mani_image_buckets/cookie.png"
+        },
+        'steps' : 
+        {
+            "Step 1: Initialize a canvas of size 800x600 pixels." : "Let's explore subtraction.",
+            "Step 2: Set the size of each cookie to 40x40 pixels." : "Imagine you have a plate with 5 cookies on it.",
+            "Step 3: Add 5 cookies horizontally, starting at coordinates (100, 300) with 50 pixel spacing between each cookie." : "Each cookie represents one item in our total count.",
+            "Step 4: Apply a fade-in effect lasting 0.5 seconds for all five cookies." : "Now, let’s say you eat 2 of these cookies. .",
+            "Step 5: Add a minus sign at coordinates (450, 300) with a size of 50x50 pixels." : "We’ll start by taking away 2 cookies from the plate..",
+            "Step 6: Add the number '5' at coordinates (300, 200) with a font size of 48px bold." : "As each cookie is removed, our total number of cookies decreases.",
+            "Step 7: Add the number '2' at coordinates (550, 200) with a font size of 48px bold." : "After removing 2 cookies, let’s count how many are left.",
+            "Step 8: Move 2 cookies starting from the rightmost cookie upwards from (300, 300) to (300, 100) one after the other with 0.5 seconds delay between each cookie and a fade-out effect over 0.3 seconds.": "We began with 5 cookies and removed 2.",
+            "Step 9: Apply a scale-in effect to the minus sign over 0.3 seconds." : "Now, there are 3 cookies left on the plate. ",
+            "Step 10: Add an equals sign at coordinates (450, 200) with a size of 50x50 pixels and apply a fade-in effect over 0.5 seconds." : "This shows that 5 minus 2 equals 3",
+            "Step 11: Add the number '3' at coordinates (450, 100) with a font size of 48px bold and apply a fade-in effect over 0.5 seconds." : "You now have 3 cookies left!"
+        }
+    } 
+
+    
+    - **Output:** Generate Manim code that:
+    - Creates animations that illustrate each step described in each of the key values of the 'steps' field. So in the JSON file for the 'steps' field, create the animation code based on what the steps are.
+    - The code generated should provide an animation that sequentially depicts each step in chronological order. e.g., the animation must flow sequentially from step 1 to step 2, and so on. The animations should reflect the correct steps of steps as they appear in the dictionary.
     - Incorporates the images provided in the `images` dictionary whenever they are mentioned in the text.
-    - If a image link is not provided, or is 'Manim', this means that the code can be generates directly from the manim library - MEANING THAT THE CODE FOR THIS SHAPE WILL NEED TO BE WRITTEN. (e.g, 'images' : { 'apple' : 'Manim' } means that the image for an apple NEEDS TO BE WRITTEN IN MANIM CODE BY THE MODEL ITSELF)
+    - If a image link is not provided, or is 'manim', this means that the code can be generates directly from the manim library - MEANING THAT THE CODE FOR THIS SHAPE WILL NEED TO BE WRITTEN. (e.g, 'images' : { 'apple' : 'manim' } means that the image for an apple NEEDS TO BE WRITTEN IN MANIM CODE BY THE MODEL ITSELF)
+    - If the speech values for the 'steps' dictionary are null, then do nothing for the voice over for that step.
     - When an object denoted by `_*object_name*_` appears in the transcript, display the corresponding image using the provided GCP bucket link.
     - Synchronizes the animations with the voiceover using Manim's VoiceOver feature.
-
-    **Manim Code Guidelines**
-    - **Object Placemennt:** Verify all objects are being placed appropriately and as intended.
-    - **Function Existence:** Verify that every function and class used in the generated code exists in the Manim library. If a step requires a function not present in the latest version, replace it with a valid alternative.
-    - **Syntax Accuracy:** Ensure that the generated Python code is syntactically correct.
-    - **Images:** The images in the JSON field 'images' must be either 'Manim' or google cloud storage links. If they are 'Manim', you must generate manim code to provide an alternative animation/shape that can represent the intended image.
-    - **Variable Definitions:** All variables must be defined before they are used in animations.
-    - **Voiceover Integration:** Ensure that voiceovers are synchronized with the animation steps using Manim's VoiceOver feature.
+   
 
     **Output Format:**
 
@@ -142,6 +146,7 @@ def manimator(data: str):
         from manim import *
         from manim_voiceover import VoiceoverScene
         from manim_voiceover.services.gtts import GTTSService
+
 
         class GTTSExample(VoiceoverScene):
             def construct(self):
@@ -165,17 +170,208 @@ def manimator(data: str):
                 self.wait()
 
 
-   
+    **Manim Code Guidelines**
+    - **Function Existence:** Verify that every function and class used in the generated code exists in the Manim library. If a step requires a function not present in the latest version, replace it with a valid alternative.
+    - **VGroup:** VGroup DOES NOT EXIST - DO NOT USE THIS FUNCTION ALWAYS REPLAE WITH ALTERNATIVES THAT ACTUALLY EXIST IN THE MANIM LIBRARY
+    - **Syntax Accuracy:** Ensure that the generated Python code is syntactically correct.
+    - **Images:** The images in the JSON field 'images' must be either 'manim' or google cloud storage links. If they are 'manim', you must generate manim code to provide an alternative animation/shape that can represent the intended image.
+    - **Variable Definitions:** All variables must be defined before they are used in animations.
+    - **Comments:** Include inline comments for clarity, explaining what each part of the code does without excessive verbosity.
+    - **Voiceover Integration:** Ensure that voiceovers are synchronized with the animation steps using Manim's VoiceOver feature.
 
+
+    **CRITICAL GUIDELINES: MUST FOLLOW**
+    - **Color Code:** ENSURE THAT THE BACKGROUND IS ALWAYS BLACK AND THE TEXT IS ALWAYS WHITE.
+    - **Sequence of image/text:** ensure that the text is of slightly smaller font size ALWAYS and NEVER overlaps with the icon images/png. THIS IS EXTREMELY IMPORTANT - ESPECIALLY THE OVERLAP ISSUE.
+    - **Object Placement:** Ensure that objects stay WITHIN 50 PIXELS ON EACH SIDE OF THE BOUNDS OF THE CANVAS. 
+    - **Mathematical Equations:** if mathematical or arithmetic equations are being written in text, POSITION THEM AWAY FROM IMAGES AND KEEP THEM IN ONE HORIZONTAL LINE - ENSURE THAT THEY DONT TRAIL OFF THE END OF THE CANVAS.
+
+    **TOPIC-BASED ANIMATION GENERATION GUIDELINES**
+
+    **
+
+
+    Computer Science:
+    - **Artificial Intelligence (AI)**:
+    - **Neural Networks**:
+        - **Scenes**: `NeuralNetworkScene`, `ActivationScene`
+        - **Objects**: Circles (neurons), Arrows (connections), Labels (node names)
+        - **Animations/Tools**: `Create()`, `FadeIn()`, `GrowArrow()`, `ValueTracker()` for dynamic data flow.
+    
+    - **Decision Trees**:
+        - **Scenes**: `DecisionTreeScene`, `PredictionScene`
+        - **Objects**: Squares (nodes), Lines (edges), Text (labels), Dots (data points)
+        - **Animations/Tools**: `DrawBorderThenFill()`, `GrowFromCenter()`, `ShowPassingFlash()` to emphasize decision points.
+
+    - **Machine Learning Concepts**:
+        - **Scenes**: `SupervisedLearningScene`, `UnsupervisedLearningScene`
+        - **Objects**: Data points (dots), Clusters (colored regions), Icons (tech stack)
+        - **Animations/Tools**: `ScatterPlot()`, `MoveAlongPath()`, `Create()`, `FadeOut()` for showing transitions.
+
+    - **Web Development**:
+    - **Frontend vs. Backend**:
+        - **Scenes**: `FrontendBackendScene`
+        - **Objects**: Two panels (for UI and server), Icons (HTML, CSS, JS), Arrows (data flow)
+        - **Animations/Tools**: `ShowIncreasingSubsets()`, `Animate()`, `FadeIn()` for UI components.
+
+    - **Responsive Design**:
+        - **Scenes**: `ResponsiveDesignScene`
+        - **Objects**: Webpage elements (rectangles), Breakpoints (dotted lines), Resize handles
+        - **Animations/Tools**: `Scale()`, `Shift()`, `FadeIn()` to demonstrate resizing.
+
+    - **Database Management**:
+    - **Normalization**:
+        - **Scenes**: `NormalizationScene`
+        - **Objects**: Tables (rectangles), Duplicates (crossed out items), Connected tables (arrows)
+        - **Animations/Tools**: `Transform()`, `DrawBorderThenFill()`, `FadeIn()` for transitions between states.
+
+    - **SQL Queries**:
+        - **Scenes**: `SQLQueryScene`
+        - **Objects**: SQL code display (Text), Result table (Grid), Data points (dots)
+        - **Animations/Tools**: `Write()`, `ShowPassingFlash()`, `FadeIn()` to reveal query results.
+
+    Algorithms:
+    - **Graph Algorithms**:
+    - **Dijkstra's Algorithm**:
+        - **Scenes**: `DijkstraScene`
+        - **Objects**: Graph nodes (circles), Edges (lines), Weights (text)
+        - **Animations/Tools**: `Create()`, `UpdateFromFunc()`, `Flash()`, `MoveAlongPath()` to visualize the path.
+
+    - **Minimum Spanning Tree**:
+        - **Scenes**: `MSTScene`
+        - **Objects**: Graph representation (nodes and edges), MST (highlighted edges)
+        - **Animations/Tools**: `ShowIncreasingSubsets()`, `GrowFromCenter()`, `FadeIn()` for selected edges.
+
+    - **Dynamic Programming**:
+    - **Fibonacci Sequence**:
+        - **Scenes**: `FibonacciScene`
+        - **Objects**: Trees (for recursion), Table (for dynamic programming)
+        - **Animations/Tools**: `Create()`, `FadeIn()`, `ValueTracker()` for visualizing recursive calls.
+
+    - **Knapsack Problem**:
+        - **Scenes**: `KnapsackScene`
+        - **Objects**: Items (rectangles), Capacity (bar), Decision markers (arrows)
+        - **Animations/Tools**: `ShowIncreasingSubsets()`, `Transform()`, `Flash()` for choices made.
+
+    Chemistry:
+    - **Organic Chemistry**:
+    - **Functional Groups**:
+        - **Scenes**: `FunctionalGroupsScene`
+        - **Objects**: Molecular structures (2D representations), Functional groups (color-coded)
+        - **Animations/Tools**: `Create()`, `FadeIn()`, `Highlight()` to demonstrate group properties.
+
+    - **Reactions Animation**:
+        - **Scenes**: `ReactionScene`
+        - **Objects**: Reactants and products (molecules), Bonds (lines), Reaction pathway (arrows)
+        - **Animations/Tools**: `DrawBorderThenFill()`, `Create()`, `Transform()`, `FadeIn()` to show reaction progression.
+
+    - **Thermodynamics**:
+    - **Laws of Thermodynamics**:
+        - **Scenes**: `ThermodynamicsScene`
+        - **Objects**: Closed system (box), Heat arrows, Work arrows
+        - **Animations/Tools**: `ShowIncreasingSubsets()`, `Create()`, `FadeIn()` to visualize energy transfer.
+
+    - **Phase Diagrams**:
+        - **Scenes**: `PhaseDiagramScene`
+        - **Objects**: Phase regions (color-coded), Critical points (dots)
+        - **Animations/Tools**: `Create()`, `FadeIn()`, `Highlight()` for transitions between phases.
+
+    Physics:
+    - **Quantum Mechanics**:
+    - **Wave-Particle Duality**:
+        - **Scenes**: `WaveParticleScene`
+        - **Objects**: Waves (sine curves), Particles (dots), Slits (rectangles)
+        - **Animations/Tools**: `Create()`, `FadeIn()`, `ShowPassingFlash()` to highlight interference patterns.
+
+    - **Quantum States**:
+        - **Scenes**: `QuantumStateScene`
+        - **Objects**: Vectors (arrows), Measurement apparatus (box)
+        - **Animations/Tools**: `Animate()`, `FadeIn()`, `Rotate()` to show state changes.
+
+    - **Electromagnetism**:
+    - **Electric Fields**:
+        - **Scenes**: `ElectricFieldScene`
+        - **Objects**: Charges (dots), Field lines (arrows), Test charge (dot)
+        - **Animations/Tools**: `Create()`, `MoveAlongPath()`, `ShowIncreasingSubsets()` for field visualization.
+
+    - **Magnetic Fields**:
+        - **Scenes**: `MagneticFieldScene`
+        - **Objects**: Current paths (lines), Magnetic field lines (curved arrows)
+        - **Animations/Tools**: `Create()`, `Rotate()`, `FadeIn()` to demonstrate interactions.
+
+    Mathematics:
+    - **Graph Theory**:
+    - **Eulerian and Hamiltonian Paths**:
+        - **Scenes**: `PathScene`
+        - **Objects**: Graph representation (nodes and edges), Paths (highlighted edges)
+        - **Animations/Tools**: `Create()`, `MoveAlongPath()`, `Flash()` to show path traversal.
+
+    - **Graph Coloring**:
+        - **Scenes**: `GraphColoringScene`
+        - **Objects**: Graph structure (nodes), Colors (filled shapes)
+        - **Animations/Tools**: `Create()`, `SetColor()`, `FadeIn()` to visualize coloring process.
+
+    - **Number Theory**:
+    - **Prime Factorization**:
+        - **Scenes**: `PrimeFactorizationScene`
+        - **Objects**: Composite numbers (rectangles), Trees (for factorization)
+        - **Animations/Tools**: `Create()`, `FadeIn()`, `Transform()` for showing factor breakdown.
+
+    - **Greatest Common Divisor (GCD)**:
+        - **Scenes**: `GCDScene`
+        - **Objects**: Number line, GCD markers (dots)
+        - **Animations/Tools**: `Create()`, `Flash()`, `ShowIncreasingSubsets()` for process visualization.
+
+    Arithmetic Operations:
+    - **Complex Numbers**:
+    - **Geometric Representation**:
+        - **Scenes**: `ComplexPlaneScene`
+        - **Objects**: Complex plane (grid), Vectors (arrows)
+        - **Animations/Tools**: `Create()`, `FadeIn()`, `Arrow()` for visualizing complex number operations.
+
+    - **Polar Form**:
+        - **Scenes**: `PolarFormScene`
+        - **Objects**: Polar coordinates (arrows), Conversion process (text)
+        - **Animations/Tools**: `Rotate()`, `Transform()`, `Flash()` for showing conversions.
+
+    - **Statistics**:
+    - **Probability Distributions**:
+        - **Scenes**: `DistributionScene`
+        - **Objects**: Graphs (curves), Data points (dots), Parameters (text)
+        - **Animations/Tools**: `Create()`, `FadeIn()`, `Animate()` for showcasing distribution changes.
+
+    - **Hypothesis Testing**:
+        - **Scenes**: `HypothesisTestingScene`
+        - **Objects**: Null and alternative hypothesis (text), Results (bars)
+        - **Animations/Tools**: `Create()`, `Flash()`, `ShowIncreasingSubsets()` for displaying results.
+
+    Biology:
+    - **Cell Biology**:
+    - **Cell Division**:
+        - **Scenes**: `CellDivisionScene`
+        - **Objects**: Cell structures (circles), Chromosomes (lines)
+        - **Animations/Tools**: `Create()`, `FadeIn()`, `ShowPassingFlash()` to highlight stages.
+
+    - **Photosynthesis**:
+        - **Scenes**: `PhotosynthesisScene`
+        - **Objects**: Chloroplast (circle), Light energy (arrows), Chemical reactions (text)
+        - **Animations/Tools**: `Create()`, `FadeIn()`, `ShowIncreasingSubsets()` for process visualization.
+
+    - **Genetics**:
+    - **Punnett Squares**:
+        - **Scenes**: `PunnettSquareScene`
+        - **Objects**: Squares (grid), Alleles (letters), Genotypes (text)
+        - **Animations/Tools**: `Create()`, `ShowPassingFlash()`, `FadeIn()` for demonstrating crosses.    
 
     """
+
 
     model = GenerativeModel(
         model_name="gemini-1.5-pro", system_instruction=system_instruction
     )
 
-
-    response = model.generate_content(data)
+    references = load_references()
+    response = model.generate_content([data, references])
     return response.text
 
 
