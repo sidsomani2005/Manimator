@@ -70,7 +70,7 @@ def steps_checking_agent(prompt: str):
 
 
     Your job is to check the images and info dictionaries in the following order:
-        1) If you find any key in the images dictionary that can be represented as LESS THAN 3 mathematical shape (for example: arrow, circle, square, triangle, line, plane, hill, undulation) replace their value with "Manim".  
+        1) If you find any key in the images dictionary that can be represented in 1 mathematical shape (e.g road as a number line, dial as a circle with an axis, panel as a rectangle, etc.) replace their value with "Manim".  
         2) After all checks for the image dictionary are completed you will go to the info dictionary and see where the any of the objects which are keys in the images dictionary are being used. Once found replace them with *_<objectkey>_* where objectkey is the actual key from the images dictionary.
 
     You will then return the updated json.
