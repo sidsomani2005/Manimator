@@ -1,0 +1,36 @@
+1
+00:00:00,000 --> 00:00:03,173
+Multiplication is like a shortcut for adding
+
+2
+00:00:03,273 --> 00:00:05,852
+the same number over and over again.
+
+3
+00:00:05,952 --> 00:00:08,939
+Imagine you have a basket of apples. Let's
+
+4
+00:00:09,039 --> 00:00:11,732
+say there are 3 apples in each basket.
+
+5
+00:00:11,832 --> 00:00:16,940
+Now, if you have 4 baskets, how many apples do you have in total?
+
+6
+00:00:17,040 --> 00:00:22,916
+Instead of adding 3 + 3 + 3 + 3, we can simply multiply!
+
+7
+00:00:23,016 --> 00:00:26,432
+We multiply the number of apples in each
+
+8
+00:00:26,532 --> 00:00:29,948
+basket (3) by the number of baskets (4).
+
+9
+00:00:30,048 --> 00:00:35,300
+So, 3 x 4 = 12. You have 12 apples in total!
+
