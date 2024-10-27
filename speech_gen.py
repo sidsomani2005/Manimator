@@ -181,6 +181,7 @@ def manimator(data: str):
 
 
     **CRITICAL GUIDELINES: MUST FOLLOW**
+    - **Voice Over:** VOICEOVER MUST BE FROM THE SRT DICTIONARY.
     - **COMPILATION INTEGRITY:** MUST ENSURE THAT THE CODE HAS PROPER SYNTAX AND NO DEPRECATED FUNCTIONS. DONT USE COMPLEX FUNCTIONS, USE SIMPLE FUNCTIONS THAT MODEL COMPLEX TASKS.
     - **Animation complexity:** ensure that for mathematical prompts and queries, the animation provides formulas, graphs, or diagrams.
     - **Color Code:** ENSURE THAT THE BACKGROUND IS ALWAYS BLACK AND THE TEXT IS ALWAYS WHITE.
@@ -427,7 +428,7 @@ def final_flow(prompt):
 
 
 if __name__ == "__main__":
-    print(final_flow("Explain differentiation, which is a topic in calculus"))
+    print(final_flow("Explain differentiation"))
 
 
 
