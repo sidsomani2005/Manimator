@@ -1,25 +1,22 @@
 
 # Manimator
 
-![Manimator Logo](https://github.com/namantalreja/manimator/logo.png)
-
 ## Overview
 
-**Manimator** is a Streamlit-based tool that allows users to create interactive animations, primarily designed for presentations and demonstrations. It streamlines the animation process with an easy-to-use interface, offering features that make it accessible for educators, developers, and content creators.
+**Manimator** is a Python-based tool that allows users to create interactive animations, primarily designed for presentations and demonstrations. It streamlines the animation process with an easy-to-use interface, offering features that make it accessible for educators, developers, and content creators.
 
 ## Key Features
 
 - **User-friendly Interface**: Intuitive design built using Streamlit.
-- **Customizable Animations**: Adjust parameters like speed, color, and movement for each animation.
-- **Real-time Preview**: Visualize animations in real-time as you build them.
-- **Export Options**: Export animations in various formats, making them shareable and compatible with other tools.
+- **Customizable Animations**: Understand any concept you wish to in seconds.
+- **Real-time VoiceOver**: Visualize animations and hear them in real-time.
 
 ## Getting Started
 
 ### Prerequisites
 
 Ensure you have the following installed:
-- Python 3.7 or above
+- Python 3.12 or above
 - Streamlit
 - Required libraries from `requirements.txt`
 
@@ -50,7 +47,7 @@ Ensure you have the following installed:
 
 ## Demo
 
-Check out the [Manimator Presentation](https://docs.google.com/presentation/d/1kKHwTysdc_za9s9smppxgI1k6ehdxDerMtCpQhOnhUQ/edit?usp=sharing) for a detailed overview and demo of Manimator's capabilities.
+Check out the [Manimator Demo]() for a detailed overview and demo of Manimator's capabilities.
 
 ## Contributing
 
@@ -64,7 +61,3 @@ Contributions are welcome! Follow these steps:
 ## License
 
 This project is licensed under the MIT License.
-
-## Contact
-
-For questions or support, please reach out to [Naman Talreja](mailto:namantalreja@example.com).
