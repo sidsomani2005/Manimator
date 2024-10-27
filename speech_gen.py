@@ -181,6 +181,8 @@ def manimator(data: str):
 
 
     **CRITICAL GUIDELINES: MUST FOLLOW**
+    - **COMPILATION INTEGRITY:** MUST ENSURE THAT THE CODE HAS PROPER SYNTAX AND NO DEPRECATED FUNCTIONS. DONT USE COMPLEX FUNCTIONS, USE SIMPLE FUNCTIONS THAT MODEL COMPLEX TASKS.
+    - **Animation complexity:** ensure that for mathematical prompts and queries, the animation provides formulas, graphs, or diagrams.
     - **Color Code:** ENSURE THAT THE BACKGROUND IS ALWAYS BLACK AND THE TEXT IS ALWAYS WHITE.
     - **Sequence of image/text:** ensure that the text is of slightly smaller font size ALWAYS and NEVER overlaps with the icon images/png. THIS IS EXTREMELY IMPORTANT - ESPECIALLY THE OVERLAP ISSUE.
     - **Object Placement:** Ensure that objects stay WITHIN 50 PIXELS ON EACH SIDE OF THE BOUNDS OF THE CANVAS. 
@@ -425,7 +427,7 @@ def final_flow(prompt):
 
 
 if __name__ == "__main__":
-    print(final_flow("Explain differentiation, which is a topic in calculus 1"))
+    print(final_flow("Explain differentiation, which is a topic in calculus"))
 
 
 
