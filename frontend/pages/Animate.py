@@ -10,6 +10,8 @@ LOGO = (
     if st_theme()["base"] != "dark"
     else "./frontend/assets/inverted-logo.png"
 )
+with open("./frontend/style.css") as css:
+    st.markdown(f"<style>{css.read()}</style>", unsafe_allow_html=True)
 
 st.markdown(
     """
@@ -39,7 +41,7 @@ st.markdown(
     }
     .empty-text {
         font-size: 24px;
-        font-weight: bold;
+        font-weight: 500;
         opacity: 0.2;
     }
     .stForm {
@@ -48,6 +50,52 @@ st.markdown(
     </style>
     """,
     unsafe_allow_html=True,
+)
+
+st.markdown(
+    f"""
+    <img class="nav logo-img" src="data:image/png;base64,{base64.b64encode(open(LOGO, "rb").read()).decode()}">
+    """,
+    unsafe_allow_html=True,
+)
+
+st.markdown(
+    """
+<style>.element-container:has(#button-after) + div a {
+    position: fixed;
+    top: 35px;
+    left: 150px;
+    outline: none !important;
+    border: none !important;
+    background: none !important;
+    cursor: pointer;
+    z-index: 2;
+ }</style>""",
+    unsafe_allow_html=True,
+)
+st.markdown('<span id="button-after"></span>', unsafe_allow_html=True)
+st.link_button(
+    "Home",
+    "/",
+)
+st.markdown(
+    """
+<style>.element-container:has(#button-after2) + div a {
+    position: fixed;
+    top: 35px;
+    left: 250px;
+    outline: none !important;
+    border: none !important;
+    background: none !important;
+    cursor: pointer;
+    z-index: 2;
+ }</style>""",
+    unsafe_allow_html=True,
+)
+st.markdown('<span id="button-after2"></span>', unsafe_allow_html=True)
+st.link_button(
+    "Animate",
+    "/Animate",
 )
 
 st.markdown(
@@ -73,13 +121,13 @@ async def call_generate(prompt, callback):
 
 
 with st.form("chat_input_form"):
-    inputCol, buttonCol = st.columns([6, 1], vertical_alignment="bottom")
+    inputCol, buttonCol = st.columns([5, 1], vertical_alignment="bottom")
 
     with inputCol:
         prompt = st.text_input(
             "",
             value="",
-            placeholder="Visually explain of how matrix transformations work",
+            placeholder="Explain matrix transformations",
             label_visibility="collapsed",
         )
     with buttonCol:
@@ -87,7 +135,7 @@ with st.form("chat_input_form"):
 
     if prompt and submitted:
 
-        update_state("Starting processes...")
+        update_state("Generating animation...")
         with st.spinner(st.session_state["current_state"]):
             output = asyncio.run(call_generate(prompt, callback=update_state))
             code, transcript, videoPath = output

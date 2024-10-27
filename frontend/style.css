@@ -1,0 +1,171 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+html,
+body,
+*,
+[class*="css"] {
+  font-family: 'Poppins', sans-serif !important;
+  font-weight: 500 !important;
+}
+
+h1 {
+  font-size: 4rem !important;
+  font-weight: 600 !important;
+  margin-bottom: -40px !important;
+  padding: 0 !important;
+}
+
+h2 {
+  font-size: 1.6rem !important;
+  font-weight: 400 !important;
+  padding: 0 !important;
+}
+
+html {
+  --darkBackground: #1E1F23;
+  --mainWhite: #fafafa;
+  --navbarHeight: 60px;
+  /* intro section background colors */
+  --color-bg1: rgb(108, 0, 162);
+  --color-bg2: rgb(0, 17, 82);
+  --color1: 18, 113, 255;
+  --color2: 221, 74, 255;
+  --color3: 100, 220, 255;
+  --color4: 200, 50, 50;
+  --color5: 170, 120, 50;
+  --color-interactive: 140, 100, 255;
+  --circle-size: 75%;
+  --blending: hard-light;
+}
+
+.stLinkButton {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.feature-box {
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  text-align: center;
+  background: rgba(250, 250, 250, 0.075);
+  border-radius: 6px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  border: 1px solid rgba(250, 250, 250, 0.15);
+  transition: all 300ms cubic-bezier(0.445, 0.050, 0.550, 0.950);
+  -webkit-transition: all 300ms cubic-bezier(0.445, 0.050, 0.550, 0.950);
+  margin-bottom: 20px;
+  cursor: pointer;
+  height: 225px;
+  font-weight: 300 !important;
+}
+
+.feature-title {
+  font-size: 1.25rem !important;
+  font-weight: 500 !important;
+  margin-bottom: 8px !important;
+}
+
+.feature-description {
+  font-size: 1rem !important;
+  font-weight: 300 !important;
+  margin-bottom: 8px !important;
+}
+
+.section-title {
+  margin-bottom: 36px !important;
+}
+
+.feature-box:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+}
+
+.stAppHeader {
+  display: none !important;
+}
+
+.stSidebar,
+[data-testid="stSidebarCollapsedControl"] {
+  display: none !important;
+}
+
+.vertical-spacer {
+  margin-bottom: 50px !important;
+}
+
+.stlinkbutton {
+  position: relative !important;
+}
+
+.stlinkbutton {
+  transition: all 300ms cubic-bezier(0.445, 0.050, 0.550, 0.950) !important;
+  -webkit-transition: all 300ms cubic-bezier(0.445, 0.050, 0.550, 0.950) !important;
+}
+
+.stlinkbutton:before {
+  position: absolute !important;
+  content: "" !important;
+  width: 100% !important;
+  height: 100% !important;
+  top: 0 !important;
+  left: 0 !important;
+  z-index: -1 !important;
+  opacity: 0 !important;
+  transition: all 500ms cubic-bezier(0.230, 1.000, 0.320, 1.000) !important;
+  -webkit-transition: all 500ms cubic-bezier(0.230, 1.000, 0.320, 1.000) !important;
+}
+
+.stlinkbutton:after {
+  content: "" !important;
+  position: absolute !important;
+  background: var(--mainWhite) !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  top: 0 !important;
+  right: 100% !important;
+  z-index: -2 !important;
+  transition: all 500ms cubic-bezier(0.230, 1.000, 0.320, 1.000) !important;
+  -webkit-transition: all 500ms cubic-bezier(0.230, 1.000, 0.320, 1.000) !important;
+}
+
+.stlinkbutton:hover {
+  color: var(--darkBackground) !important;
+}
+
+.feature-icon {
+  margin-bottom: 18px !important;
+}
+
+input {
+  font-weight: 400 !important;
+}
+
+.stMainBlockContainer {
+  max-width: 50% !important;
+  /* padding: 0 !important; */
+}
+
+.nav {
+  position: fixed;
+  top: 35px;
+  left: 60px;
+  width: 40px !important;
+  height: 40px !important;
+  z-index: 3 !important;
+}
+
+.navcontainer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 75px !important;
+  z-index: 2 !important;
+  backdrop-filter: blur(5px) !important;
+}
