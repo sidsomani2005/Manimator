@@ -65,14 +65,18 @@ async def generate_video() -> tuple[str, str]:
 
 # returns path to the generated video
 async def generate(
-    user_prompt, replaceCode=None, reuseMetadata=None
+    user_prompt, replaceCode=None, reuseMetadata=None, callback=None
 ) -> tuple[str, str]:
+    if callback:
+        callback("Generating Metadata...")
     if replaceCode is None or reuseMetadata is None:
-        metadata, code = final_flow(user_prompt)
+        metadata, code = final_flow(user_prompt, callback=callback)
     else:
         metadata = reuseMetadata
         code = replaceCode
 
+    if callback:
+        callback("Generating VoiceOver and Checking Steps")
     metadata_json = json.loads(remove_code_block_markers(metadata))
 
     # steps = metadata_json["steps"]
@@ -96,16 +100,24 @@ async def generate(
     video_path, err_msg = await generate_video()
     print(video_path, err_msg)
     if video_path == "" and err_msg != "":
+        if callback:
+            callback("Error generating video. Regenerating code...")
         print(f"Error generating video: {err_msg}")
         print("Regenerating code...")
         newCode = error_checking_agent(
             subject=metadata_json["title"], code=code, err=err_msg
         )
         print("New code generated. Regenerating video...")
-        return await generate(user_prompt, replaceCode=newCode, reuseMetadata=metadata)
+        return await generate(
+            user_prompt, replaceCode=newCode, reuseMetadata=metadata, callback=callback
+        )
     # else:
+    # if callback:
+    #     callback("Reviewing video for quality assurance")
     # review the videa for quality assurance
     # video_path = video_checking_agent(video_path, code, metadata_json)
+    if callback:
+        callback("Almost done...")
     return (code, transcript, video_path)
 
 

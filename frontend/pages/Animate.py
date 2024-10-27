@@ -61,8 +61,12 @@ st.markdown(
 )
 
 
-async def call_generate(prompt):
-    output = await generate.generate(prompt)
+def update_state(new_state):
+    st.session_state["current_state"] = new_state
+
+
+async def call_generate(prompt, callback):
+    output = await generate.generate(prompt, callback=callback)
     code, transcript, videoPath = output
     print(transcript, videoPath)
     return output
@@ -83,8 +87,9 @@ with st.form("chat_input_form"):
 
     if prompt and submitted:
 
-        with st.spinner("Generating animation..."):
-            output = asyncio.run(call_generate(prompt))
+        update_state("Starting processes...")
+        with st.spinner(st.session_state["current_state"]):
+            output = asyncio.run(call_generate(prompt, callback=update_state))
             code, transcript, videoPath = output
 
         st.video(

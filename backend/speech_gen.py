@@ -288,28 +288,40 @@ def download_images(metadata: str):
     return metadata
 
 
-def final_flow(prompt):
+def final_flow(prompt, callback=None):
     try:
+        if callback:
+            callback("Planning the video...")
         initial_check = steps_agent(prompt)
         next_check = remove_code_block_markers(initial_check, "json")
         step_json = json.loads(next_check)
         clone_json = copy.deepcopy(step_json)
         del clone_json["srt"]
         del clone_json["title"]
+        if callback:
+            callback("Reviewing the plan and generating voiceover...")
         changed_images = steps_checking_agent(json.dumps(clone_json, indent=2))
         changed_images = remove_code_block_markers(changed_images, "json")
         changed_json = json.loads(changed_images)
         step_json["images"] = changed_json["images"]
         step_json["info"] = changed_json["info"]
+        if callback:
+            callback("Generating images using ImageGen3...")
         next_check = main(step_json)
         print(next_check)
+        if callback:
+            callback("Downloading images...")
         final_metadata = download_images(next_check)
         print(final_metadata)
+        if callback:
+            callback("Generating Manim code...")
         code = manimator(final_metadata)
     except Exception as e:
         print(f"Error generating video: {e}")
         print("Retrying...")
         return final_flow(prompt)
+    if callback:
+        callback("Source code generated successfully.")
     return (final_metadata, code)
 
 
