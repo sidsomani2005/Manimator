@@ -1,3 +1,5 @@
+
+
 import vertexai
 from vertexai.generative_models import GenerativeModel
 import os
@@ -14,6 +16,11 @@ def load_guidelines():
     with open("manim_docs.md", "r") as f:
         guidelines = f.read()
     return guidelines
+
+def load_references():
+    with open("reference_db.md", "r") as f:  
+        references = f.read()
+    return references
 
 
 def manimator(data: str):
@@ -97,6 +104,8 @@ def manimator(data: str):
 
 
     **Manim Code Guidelines**
+    - **Color Code:** ENSURE THAT THE BACKGROUND IS ALWAYS BLACK AND THE TEXT IS ALWAYS WHITE.
+    - **SEQUENCE OF IMAGE/TEXT DISPLAY:** ensure that the text is of slightly smaller font size ALWAYS and NEVER overlaps with the icon images/png. THIS IS EXTREMELY IMPORTANT - ESPECIALLY THE OVERLAP ISSUE.
     - **Function Existence:** Verify that every function and class used in the generated code exists in the Manim library. If a step requires a function not present in the latest version, replace it with a valid alternative.
     - **VGroup:** VGroup DOES NOT EXIST - DO NOT USE THIS FUNCTION ALWAYS REPLAE WITH ALTERNATIVES THAT ACTUALLY EXIST IN THE MANIM LIBRARY
     - **Syntax Accuracy:** Ensure that the generated Python code is syntactically correct.
@@ -105,64 +114,73 @@ def manimator(data: str):
     - **Comments:** Include inline comments for clarity, explaining what each part of the code does without excessive verbosity.
     - **Voiceover Integration:** Ensure that voiceovers are synchronized with the animation steps using Manim's VoiceOver feature.
 
-
     """
+
 
     model = GenerativeModel(
         model_name="gemini-1.5-pro", system_instruction=system_instruction
     )
 
     guidelines = load_guidelines()
-    response = model.generate_content([data, guidelines])
+    references = load_references()
+    # response = model.generate_content([data, guidelines, references])
+    # response = model.generate_content([data, guidelines])
+    # response = model.generate_content([data, references])
+    response = model.generate_content(data)
     return response.text
 
 
 
+
+
 if __name__ == "__main__":
-    data ="""
+    # data ="""
+    # {
+    #         'title' : "Subtraction",
+    #         'images' : 
+    #         {
+    #             'cookie': "https://storage.googleapis.com/mani_image_buckets/cookie.png"
+    #         },
+    #         'steps' : 
+    #         {
+    #             "Step 1: Initialize a canvas of size 800x600 pixels." : "Let's explore subtraction.",
+    #             "Step 2: Set the size of each cookie to 40x40 pixels." : "Imagine you have a plate with 5 cookies on it.",
+    #             "Step 3: Add 5 cookies horizontally, starting at coordinates (100, 300) with 50 pixel spacing between each cookie." : "Each cookie represents one item in our total count.",
+    #             "Step 4: Apply a fade-in effect lasting 0.5 seconds for all five cookies." : "Now, let’s say you eat 2 of these cookies. .",
+    #             "Step 5: Add a minus sign at coordinates (450, 300) with a size of 50x50 pixels." : "We’ll start by taking away 2 cookies from the plate..",
+    #             "Step 6: Add the number '5' at coordinates (300, 200) with a font size of 48px bold." : "As each cookie is removed, our total number of cookies decreases.",
+    #             "Step 7: Add the number '2' at coordinates (550, 200) with a font size of 48px bold." : "After removing 2 cookies, let’s count how many are left.",
+    #             "Step 8: Move 2 cookies starting from the rightmost cookie upwards from (300, 300) to (300, 100) one after the other with 0.5 seconds delay between each cookie and a fade-out effect over 0.3 seconds.": "We began with 5 cookies and removed 2.",
+    #             "Step 9: Apply a scale-in effect to the minus sign over 0.3 seconds." : "Now, there are 3 cookies left on the plate. ",
+    #             "Step 10: Add an equals sign at coordinates (450, 200) with a size of 50x50 pixels and apply a fade-in effect over 0.5 seconds." : "This shows that 5 minus 2 equals 3",
+    #             "Step 11: Add the number '3' at coordinates (450, 100) with a font size of 48px bold and apply a fade-in effect over 0.5 seconds." : "You now have 3 cookies left!"
+    #         }
+    #     } 
+
+    # """
+    data = """
     {
-            'title' : "Subtraction",
-            'images' : 
-            {
-                'cookie': "https://storage.googleapis.com/mani_image_buckets/cookie.png"
-            },
-            'steps' : 
-            {
-                "Step 1: Initialize a canvas of size 800x600 pixels." : "Let's explore subtraction.",
-                "Step 2: Set the size of each cookie to 40x40 pixels." : "Imagine you have a plate with 5 cookies on it.",
-                "Step 3: Add 5 cookies horizontally, starting at coordinates (100, 300) with 50 pixel spacing between each cookie." : "Each cookie represents one item in our total count.",
-                "Step 4: Apply a fade-in effect lasting 0.5 seconds for all five cookies." : "Now, let’s say you eat 2 of these cookies. .",
-                "Step 5: Add a minus sign at coordinates (450, 300) with a size of 50x50 pixels." : "We’ll start by taking away 2 cookies from the plate..",
-                "Step 6: Add the number '5' at coordinates (300, 200) with a font size of 48px bold." : "As each cookie is removed, our total number of cookies decreases.",
-                "Step 7: Add the number '2' at coordinates (550, 200) with a font size of 48px bold." : "After removing 2 cookies, let’s count how many are left.",
-                "Step 8: Move 2 cookies starting from the rightmost cookie upwards from (300, 300) to (300, 100) one after the other with 0.5 seconds delay between each cookie and a fade-out effect over 0.3 seconds.": "We began with 5 cookies and removed 2.",
-                "Step 9: Apply a scale-in effect to the minus sign over 0.3 seconds." : "Now, there are 3 cookies left on the plate. ",
-                "Step 10: Add an equals sign at coordinates (450, 200) with a size of 50x50 pixels and apply a fade-in effect over 0.5 seconds." : "This shows that 5 minus 2 equals 3",
-                "Step 11: Add the number '3' at coordinates (450, 100) with a font size of 48px bold and apply a fade-in effect over 0.5 seconds." : "You now have 3 cookies left!"
-            }
-        } 
+        "title": "Addition",
+        "images": {
+            "apple": "https://storage.googleapis.com/mani_image_buckets/apple.png"
+        },
+        "steps": {
+            "Step 1: Initialize a canvas of size 800x600 pixels.": "Let's explore addition.",
+            "Step 2: Set the size of each apple to 40x40 pixels.": "Imagine you have a basket with 3 apples.",
+            "Step 3: Add 3 apples horizontally, starting at coordinates (100, 300) with 50 pixel spacing between each apple.": "Each apple represents one item in our total count.",
+            "Step 4: Apply a fade-in effect lasting 0.5 seconds for all three apples.": "Now, let’s say you pick 2 more apples.",
+            "Step 5: Add a plus sign at coordinates (450, 300) with a size of 50x50 pixels.": "We’ll start by adding 2 more apples to our basket.",
+            "Step 6: Add the number '3' at coordinates (300, 200) with a font size of 48px bold.": "As we add more apples, our total number of apples increases.",
+            "Step 7: Add the number '2' at coordinates (550, 200) with a font size of 48px bold.": "After picking 2 more apples, let’s count how many we have.",
+            "Step 8: Move 2 apples from the right into the basket at coordinates (300, 300) one after the other with 0.5 seconds delay between each apple and a fade-in effect over 0.3 seconds.": "We began with 3 apples and added 2.",
+            "Step 9: Apply a scale-in effect to the plus sign over 0.3 seconds.": "Now, there are 5 apples in total.",
+            "Step 10: Add an equals sign at coordinates (450, 200) with a size of 50x50 pixels and apply a fade-in effect over 0.5 seconds.": "This shows that 3 plus 2 equals 5.",
+            "Step 11: Add the number '5' at coordinates (450, 100) with a font size of 48px bold and apply a fade-in effect over 0.5 seconds.": "You now have 5 apples in your basket!"
+        }
+    }
+
 
     """
     print(manimator(data))
 
 
-
-
-# def checking_agent(video: str, subject: str, code: str):
-#     video_file = Part.from_uri(
-#     uri=video,
-#     mime_type="video/mp4",
-#     )
-#     system_instruction = """
-#     You are an assistant that checks a video explaing a key concept called"""+  subject +""". 
-#     You are given the video and the manim code to generate the video. Your job is to correct the manim code so the video
-#     is correct and as intended. You must make sure that the concept is explained properly. You will only return manim code 
-#     in the same format it was given to you. Dont explain anything just return the code.
-#     """
-#     contents = [video_file, "The video is attached and here is the code used to generate the video:" + code]
-#     model = GenerativeModel(
-#         model_name="gemini-1.5-pro", system_instruction=system_instruction
-#     )
-
-#     response = model.generate_content(contents)
-#     return response.text
