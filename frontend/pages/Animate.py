@@ -63,9 +63,9 @@ st.markdown(
 
 async def call_generate(prompt):
     output = await generate.generate(prompt)
-    videoPath = await generate.generate_video()
-    code, transcript = output
-    return (code, transcript, videoPath)
+    code, transcript, videoPath = output
+    print(transcript, videoPath)
+    return output
 
 
 with st.form("chat_input_form"):

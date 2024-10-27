@@ -1,30 +1,8 @@
 import asyncio, os, json, subprocess
-from prompt_gen import main_prompt, manimator
+from speech_gen import final_flow, remove_code_block_markers, error_checking_agent
 
 
-# returns path to the generated video
-async def generate(user_prompt) -> tuple[str, str]:
-    mp = main_prompt(user_prompt)
-    code = manimator(mp)
-    mp = mp[8:-4]
-    mp = json.loads(mp)
-    steps = mp["steps"]
-    transcript = ""
-    for step in steps:
-        if steps[step] is not None:
-            transcript += steps[step] + "\n\n"
-    transcript = transcript[:-2]
-    code = code[10:-4]
-    current_dir = os.path.dirname(os.path.abspath(__file__))
-    output_dir = os.path.join(current_dir, "output")
-    os.makedirs(output_dir, exist_ok=True)
-    file_path = os.path.join(output_dir, "manim_script.py")
-    with open(file_path, "w") as file:
-        file.write(code)
-    return (code, transcript)
-
-
-async def generate_video():
+async def generate_video() -> tuple[str, str]:
     current_dir = os.path.dirname(os.path.abspath(__file__))
     output_dir = os.path.join(current_dir, "output")
     script_path = os.path.join(output_dir, "manim_script.py")
@@ -46,14 +24,15 @@ async def generate_video():
     ]
 
     process = subprocess.run(
-        *docker_command, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
+        docker_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE
     )
-    stdout, stderr = await process.communicate()
+
+    stdout = process.stdout.decode("utf-8")
+    stderr = process.stderr.decode("utf-8")
 
     if process.returncode != 0:
-        error_message = stderr.decode()
-        print(f"Error running Manim script:\n{error_message}")
-        raise RuntimeError("Manim script failed to run.")
+        print(f"Error running Manim script:\n{stderr}")
+        return ("", stderr)
 
     media_dir = os.path.join(output_dir, "media", "videos", "manim_script")
 
@@ -75,11 +54,50 @@ async def generate_video():
 
     video_file = video_files[0]
     video_path = os.path.join(resolution_dir, video_file)
-
-    return video_path
+    return (video_path, "")
     # return "./backend/output/GTTSExample.mp4"
 
 
+# returns path to the generated video
+async def generate(
+    user_prompt, replaceCode=None, reuseMetadata=None
+) -> tuple[str, str]:
+    if replaceCode is None or reuseMetadata is None:
+        metadata, code = final_flow(user_prompt)
+    else:
+        metadata = reuseMetadata
+        code = replaceCode
+
+    metadata_json = json.loads(remove_code_block_markers(metadata))
+    steps = metadata_json["steps"]
+    transcript = ""
+    for step in steps:
+        if steps[step] is not None:
+            transcript += steps[step] + "\n\n"
+    transcript = transcript[:-2]
+
+    code = remove_code_block_markers(code, language="python")
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    output_dir = os.path.join(current_dir, "output")
+    os.makedirs(output_dir, exist_ok=True)
+    file_path = os.path.join(output_dir, "manim_script.py")
+    with open(file_path, "w") as file:
+        file.write(code)
+    print("Manim script generated.")
+    print(metadata_json)
+    video_path, err_msg = await generate_video()
+    print(video_path, err_msg)
+    if video_path == "" and err_msg != "":
+        print(f"Error generating video: {err_msg}")
+        print("Regenerating code...")
+        newCode = error_checking_agent(
+            subject=metadata_json["title"], code=code, err=err_msg
+        )
+        print("New code generated. Regenerating video...")
+        return await generate(user_prompt, replaceCode=newCode, reuseMetadata=metadata)
+    return (code, transcript, video_path)
+
+
 # if __name__ == "__main__":
-#     asyncio.run(generate("Division"))
-#     # asyncio.run(generate_video())
+#     asyncio.run(generate("explain division"))
+#     asyncio.run(generate_video())
