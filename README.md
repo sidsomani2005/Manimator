@@ -1,3 +1,4 @@
+# Manimator: automated animations for every idea
 ![Logo](logo.jpeg)
 <br></br>
 
