@@ -1,3 +1,4 @@
+# Manimator: an multi-agent LLM tool to animate your ideas
 ![Logo](logo.jpeg)
 <br></br>
 
