@@ -25,10 +25,12 @@ Check out the [Manimator Demo](https://devpost.com/software/manimator) on Devpos
 ## Key Features
 
 - **User-friendly Interface**: Intuitive and aesthetic UI design built using Streamlit.
-- **Customizable Animations**: Understand any concept you wish to in seconds.
-- **Real-time VoiceOver**: Visualize animations and hear them in real-time.
+- **Customizable Animations**: Understand any concept you wish to in seconds, custom image generations using [Google's Imagen3](https://deepmind.google/technologies/imagen-3/).
+- **Real-time VoiceOver**: Visualize animations and hear them in real-time using [Vertex AI](https://cloud.google.com/vertex-ai/generative-ai/docs/speech/text-to-speech) text-to-speech model.
 <br></br>
 
+## Tech Stack
+![Tech Stack]()
 
 ## Getting Started
 
