@@ -1,6 +1,7 @@
 
 # Manimator
 ![Logo](logo.jpeg)
+<br></br>
 
 ## Overview
 
