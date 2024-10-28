@@ -1,15 +1,29 @@
 
 # Manimator
 
+
 ## Overview
 
-**Manimator** is a Python-based tool that allows users to create interactive animations, primarily designed for presentations and demonstrations. It streamlines the animation process with an easy-to-use interface, offering features that make it accessible for educators, developers, and content creators.
+**Manimator** is an multi-agent LLM animation tool designed to create engaging educational videos on any topic. Whether it's visualizing complex mathematics or explaining the fundamentals of blockchain, Manimator transforms intricate subjects into concise, accessible clips for audiences of all ages. 
+<br></br>
+
+## How Does It Work?
+
+Manimator utilizes a five-stage agentic LLM processing flow, along with state of the art image generation and text-to-speech technologies to effectively construct clear and cohesive animations based on user prompts.
+<br></br>
+
+## Workflow
+
+
+<br></br>
 
 ## Key Features
 
-- **User-friendly Interface**: Intuitive design built using Streamlit.
+- **User-friendly Interface**: Intuitive and aesthetic UI design built using Streamlit.
 - **Customizable Animations**: Understand any concept you wish to in seconds.
 - **Real-time VoiceOver**: Visualize animations and hear them in real-time.
+<br></br>
+
 
 ## Getting Started
 
@@ -36,6 +50,7 @@ Ensure you have the following installed:
     ```bash
     streamlit run app.py
     ```
+<br></br>
 
 ### Usage
 
@@ -47,7 +62,8 @@ Ensure you have the following installed:
 
 ## Demo
 
-Check out the [Manimator Demo]() for a detailed overview and demo of Manimator's capabilities.
+Check out the [Manimator Demo](https://devpost.com/software/manimator) on Devpost for a detailed overview and demo of Manimator's capabilities.
+<br></br>
 
 ## Contributing
 
