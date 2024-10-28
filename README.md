@@ -30,7 +30,7 @@ Check out the [Manimator Demo](https://devpost.com/software/manimator) on Devpos
 <br></br>
 
 ## Tech Stack
-![Tech Stack]()
+![Tech Stack](tech_stack.jpeg)
 
 ## Getting Started
 
