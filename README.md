@@ -1,10 +1,10 @@
 # Manimator: an multi-agent LLM tool to animate your ideas
 ![Logo](logo.jpeg)
 
-<br></br>
 
 ## What Is It?
 **Manimator** is an multi-agent LLM animation tool designed to create engaging educational videos on any topic. Whether it's visualizing complex mathematics or explaining the fundamentals of blockchain, Manimator transforms intricate subjects into concise, accessible clips for audiences of all ages. 
+<br></br>
 
 ## How Does It Work?
 
