@@ -1,4 +1,5 @@
-# Manimator: automated animations for every idea
+# Manimator: a multi-agent LLM animation tool to automate animations for your every idea
+
 ![Logo](logo.jpeg)
 <br></br>
 
