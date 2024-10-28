@@ -1,6 +1,6 @@
 
 # Manimator
-
+![Logo](workflow.jpeg)
 
 ## Overview
 
