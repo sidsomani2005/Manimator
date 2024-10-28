@@ -68,7 +68,6 @@ Ensure you have the following installed:
     streamlit run app.py
     ```
 <br></br>
-
 ### Usage
 
 1. Launch the app using the command above.
