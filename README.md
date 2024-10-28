@@ -11,6 +11,12 @@
 Manimator utilizes a five-stage agentic LLM processing flow, along with state of the art image generation and text-to-speech technologies to effectively construct clear and cohesive animations based on user prompts.
 <br></br>
 
+## Demo
+
+Check out the [Manimator Demo](https://devpost.com/software/manimator) on Devpost for a detailed overview and demo of Manimator's capabilities.
+<br></br>
+
+
 ## Workflow
 ![Workflow](workflow.jpeg)
 
@@ -58,10 +64,6 @@ Ensure you have the following installed:
 3. Adjust the parameters as needed.
 4. Preview the animation in real-time.
 5. Export the final animation in your preferred format.
-
-## Demo
-
-Check out the [Manimator Demo](https://devpost.com/software/manimator) on Devpost for a detailed overview and demo of Manimator's capabilities.
 <br></br>
 
 ## Contributing
