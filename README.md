@@ -1,6 +1,6 @@
 
 # Manimator
-![Logo](workflow.jpeg)
+![Logo](logo.jpeg)
 
 ## Overview
 
@@ -13,7 +13,7 @@ Manimator utilizes a five-stage agentic LLM processing flow, along with state of
 <br></br>
 
 ## Workflow
-
+![Workflow](workflow.jpeg)
 
 <br></br>
 
